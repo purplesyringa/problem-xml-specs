@@ -28,9 +28,11 @@ The goal of this small digression is not to waste the problemsetters' valuable t
 
 When the user sends the submission to the system, it *compiles* the submission unless it's written in an interpretable language. It then *runs* the submission on each of the tests, ensuring that it does not use more time, memory, or other resources than allowed, that it does not crash or attempt anything malicious. The output on each of the tests is recorded, and the *checker* is invoked to compare the output of the submission with the output of the *model solution*, which is the author's supposedly correct solution to the problem. The checker responds with a *verdict*. The verdicts of the submission on each test are then combined to rate the submission using a *valuer*.
 
-The author finds such a complex assumed scheme unsatisfactory and proposes to allow problemsetters to build their own pipelines, which would allow for finer behavior than what the present scheme supports.
+The author finds such a complex assumed scheme unsatisfactory and proposes to allow problemsetters to build their own pipelines, which would allow for finer behavior than what the present scheme supports. With this scheme, the pipeline is not inferred by the judge, but loaded from the problem package. Then the actions the judge has to perform are reduced to the following.
 
-That is not to say that all compliant systems are expected to implement the support for such arbitrary pipelines. The main goal of this section is to formalize the judging process so that how the various configuration options affect testing is more obvious.
+When the user sends the submission to the system, it runs the *strategy*. The strategy determines everything that has to be done, including but not limited to compilation, invocation, and evaluation, and does everything necessary to judge the submission. The system then parses the verdicts from the output of the strategy.
+
+That is not to say that all compliant systems are expected to implement support for arbitrary pipelines, or strategies. It also does not mean that problemsetters will have to write these pipelines manually--it is assumed that preparation systems will take care of that in 99% of the cases. Compatibility with existing problems is completely retained too. In fact, the main goal of this section is to formalize the judging process so that how the various configuration options of existing formats affect testing is more obvious.
 
 
 ## 2.2. Scope
@@ -43,9 +45,11 @@ The list of supported types includes:
 - Interactive problems,
 - Run-twice problems (of various kinds),
 - Output-only problems,
-- Dynamic scoring problems,
 - Problems with graders,
-- (For lack of a better word) formulaic problems.
+- Problems with valuers,
+- (For lack of a better word) formulaic problems,
+- Compile-on-each-test problems,
+- Efficiency-rated problems.
 
 Moreover, the same scheme allows for problems usually considered out of scope of competitive programming, e.g. problems with custom languages or machine learning model grading.
 
@@ -61,9 +65,10 @@ Firstly, we show how the strategy for a simple input/output problem looks like:
 ```python
 user = await compile(submission)
 for test in tests:
-    output = File()
-    user(stdin=test.input, stdout=output, limits=Limits(time=1, memory=256 * 1024 * 1024))
-    checker(test.input, output, test.answer)
+    with test:
+        output = File()
+        user(stdin=test.input, stdout=output, limits=Limits(time=1, memory=256 * 1024 * 1024))
+        checker(test.input, output, test.answer)
 ```
 
 Most of this should be self-explanatory. Per line:
@@ -72,14 +77,65 @@ Most of this should be self-explanatory. Per line:
 
 2. The behavior for each test is defined.
 
-3. An empty file is created (one for each test).
+3. Test context is entered, so that all verdicts are applied to this test.
 
-4. The `user` program (that was just compiled) is invoked with standard output redirected into this new file, and standard input redirected from the input file associated with the test. The program is subject to the provided CPU time limit (in seconds) and memory limit (in bytes).
+4. An empty file is created (one for each test).
 
-5. The `checker` program, which is provided by the problem, is invoked with three arguments: the path to input file, the path to the submission output, and the path to the model answer.
+5. The `user` program (that was just compiled) is invoked with standard output redirected into this new file, and standard input redirected from the input file associated with the test. The program is subject to the provided CPU time limit (in seconds) and memory limit (in bytes).
+
+6. The `checker` program, which is provided by the problem, is invoked with three arguments: the path to input file, the path to the submission output, and the path to the model answer.
+
+Another example is due, hopefully with no need of explanation. A run-twice problem may have the following strategy:
+
+```python
+limits = Limits(time=1, memory=256 * 1024 * 1024)
+user = await compile(submission)
+for test in tests:
+    with test:
+        run1_output, run2_input, run2_output = File(), File(), File()
+        user(stdin=test.input, stdout=run1_output, limits=limits)
+        checker(test.input, run1_output, test.answer, stdout=run2_input)
+        user(stdin=run2_input, stdout=run2_output, limits=limits)
+        checker(run2_input, run2_output, test.answer)
+```
 
 
-### 2.4. More examples
+## 2.4. Interpretation
+
+As can perhaps be seen already, the strategy script is written in Python, with some global variables provided in addition to the default ones. We will now dive into formal exporation of these provided objects.
+
+Firstly, `submission` is the file sent to the judge by the user.
+
+Its Python type is `File`. `File` is a container for any sort of raw data. `File` can store the type of the contained file as specified in [100. Types](100-types.md). This type can be accessed and modified via the `type` property, which stores an instance of `Type`. `Type` can be constructed using `Type("...")`, converted to a string using `str(...)`, and matched with a mask using `type.matches("...")`.
+
+`compile` is an asynchronous function that takes a source file with a known type as a `File` object and emits an executable file. The type of the result if `Executable`.
+
+`Executable` usually represents a single file that is stored as a `File` object in the `main_file` attribute. However, in some cases an executable object may consist of several files. In this case `main_file` will only store one file, and the list of files along with their names is stored in the `files` attribute of type `dict[str, File]` (including `main_file` itself).
+
+Executables that are attached to the problem, such as checkers and validators, are stored as `Executable` objects named `checker`, `validator`, etc. This can be customized.
+
+`Limits` stores the various limitations the program is subject to. The mandatory limits are `time` (in seconds), `memory` (in bytes), and `real_time` (in seconds). Systems MAY implement their own custom limitations. If a limit is not set, its value is implementation-defined.
+
+`tests` is a global iterable of all tests of a program. It will not necessarily be a `list`, but it can be iterated by, yielding instances of `Test`.
+
+A `Test` object has a property called `no`, which stores the ID of test, usually in 1-indexation. It also *usually* has properties `input` and `answer`, each of type `File`, but these properties may not be present, or other properties may be, if the problem is of a non-standard type--this is configurable.
+
+A `Test` is a Python context manager, which means it can be passed as an argument to the `with` statement. Per-test operations MUST be wrapped in `with test`.
+
+A `File` object can be created using the `File()` constructor, which creates a file of unknown type. The type can be passed at construction time via `File(type="...")`.
+
+An `Executable` object can be invoked by calling the object directly: `executable(*argv, stdin=..., stdout=..., stderr=...)`. An item of `argv` can be a string, a `bytes` object, a `File`, or a `Pipe`, which is described in the next section. If an item is a `File` or a `Pipe`, the path to the object on the filesystem is passed as an argument. The default values of `stdin`, `stdout`, and `stderr` are `None`, which is equivalent to writing to or reading from `/dev/null` or `NUL`. The default value of `limits` is `Limits()`. This returns an asynchronous future. Even if it is not awaited, the invocation is still performed.
+
+If a `File` passed within `argv` or via `stdin` to an executable is being written to at the moment (by another executable), invocation is implicitly delayed until the latter executable terminates.
+
+If any invocation or compilation fails (which includes exceeding limits, non-zero exit code for `kind == "user"`, and a non-AC verdict for `kind == "system" || kind == "testlib"`), all operations related to the test are terminated immediately, and `AbortedException` is scheduled to be thrown when any of those operations are awaited. This exception is swallowed by `with test` automatically. This behavior was not explicitly visible in the two examples above, because nothing was awaited, but this information will come in handy later.
+
+Executables have a kind stored in the `kind` property. The property is modifiable. This kind can be either `"user"`, `"system"`, or `"testlib"`. The first option indicates that the program is provided by the user, and if it errors, it is the user's fault. The latter two options indicate that all failures are problemsetter's fault. In the third case, the exit code and the stderr of the program are additionally parsed as if generated by `testlib` and affect the verdict. The result of what test is affected is determined by the covering `with test` statement. If it is missing, the modification is applied problem-wide.
+
+This should be enough to explain how the examples above work.
+
+
+## 2.5. Pipes
 
 The strategy for a typical interactive problem looks as follows:
 
@@ -87,50 +143,184 @@ The strategy for a typical interactive problem looks as follows:
 limits = Limits(time=1, memory=256 * 1024 * 1024)
 user = await compile(submission)
 for test in tests:
-    interactor_output = File()
-    interactor_to_user, user_to_interactor = Pipe(), Pipe()
-    user(stdin=interactor_to_user, stdout=user_to_interactor, limits=limits)
-    interactor(test.input, interactor_output, test.answer, stdin=user_to_interactor, stdout=interactor_to_user)
-    checker(test.input, interactor_output, answer)
+    with test:
+        interactor_output = File()
+        i2u, u2i = Pipe(), Pipe()
+        user(stdin=i2u, stdout=u2i, limits=limits)
+        interactor(test.input, interactor_output, test.answer, stdin=u2i, stdout=i2u)
+        checker(test.input, interactor_output, test.answer)
 ```
 
-A run-twice problem can have the following strategy:
+In this example, there is a new kind of object: `Pipe`. A `Pipe` refers to a named PIPE or an equivalent object, depending on the platform. A `Pipe` is not subject to the reader-after-writer feature of `File`. `Pipe`s are unidirectional: if a pipe is passed to an executable via `stdout` or `stderr`, only the write end is passed, and if it is passed via `argv` and `stdin`, only the read end is passed. If the write end of `pipe` is to be passed via `argv`, `pipe.as_writable()` should be passed instead.
+
+
+## 2.6. Archives
+
+The strategy for a typical output-only problem looks as follows:
+
+```python
+user = submission.into_archive()
+for test in tests:
+    with test:
+        try:
+            checker(test.input, user[f"{test.no:02}.out"], answer)
+        except KeyError:
+            test.rate(PE, "File is missing")
+```
+
+The `into_archive()` method of a `File` interprets it as a ZIP archive, or another archive type if supported by the judge. The contents of an `Archive` object can be accessed using the indexing operator, which takes the name of the file as the index and returns a `File` object. If there is no such file, `KeyError` is thrown, just like with a normal dictionary.
+
+The verdicts on the tests are usually detected automatically according to the following rules. The list of verdicts is listed in [0. Verdict](00-verdict.md). The first executable to fail, if any, determines the verdict:
+
+- If the failed program has `user` kind, then TLE, MLE, RE, and other errors are directly translated into the verdict.
+
+- If the failed program has `system` kind, then TLE, MLE, and other errors are translated to CF,
+
+- If the failed program has `testlib` kind, then TLE, MLE, and other errors are translated to CF, and otherwise the exit code and stderr are used to determine the appropriate verdict.
+
+If no program fails, the verdict is considered OK, unless any program of kind `testlib` sets the verdict to PT, in which case that verdict is assumed. If several programs of kind `testlib` are called and none fails, either all of them MUST return OK, or one of them MUST return PE and all the others OK.
+
+The strategy can overwrite the verdict via a call to `test.rate`. This function takes a verdict, and then a comment as an optional argument. The verdicts are global variables named `OK`, `RE`, etc., as described in [0. Verdict](00-verdict.md), with the exception of `PT`, which is to be initialized as `PT(points)`. The verdict can later be accessed via the `test.verdict`, and the comment via `test.comment`.
+
+
+## 2.7. Arbitrary compilation
+
+If different code has to be linked into the program supplied by the user, the strategy may look as follows:
+
+```python
+limits = Limits(time=1, memory=256 * 1024 * 1024)
+
+async def run_test(test):
+    with test:
+        output = File()
+        user = await compile(submission, test.code, kind="testlib")
+        user(stdin=test.input, stdout=output, limits=limits)
+        checker(test.input, output, test.answer)
+
+for test in tests:
+    asyncio.create_task(run_test(test))
+```
+
+The coroutine `run_test` is introduced and is started as an asyncio task. This is to ensure that several tests can be judged in parallel, if the judge desires so. This was not necessary before because `await` was not used inside the loop.
+
+Several source code files are passed to `compile`. As they are of different kinds, the kind of the resulting executable has to be supplied manually. In this example, it is assumed that `test.code` contains the entrypoint of the program and returns the appropriate verdict in testlib style. **Note that this is insecure and only used here for demonstration of capabilities of strategies.**
+
+If compilation fails during per-test judgement, `compile` raises `AbortedException`, which is swallowed by `with test`, and this failure is translated to CE verdict on the test.
+
+Note that this assumes that the programs at `submission` and `test.code` are written in the same language. If that isn't so, CE verdict will be raised.
+
+
+## 2.8. Efficiency-rated problems
+
+If problemsetters wanted to rate solutions based on the time it takes for them to execute, their strategies could look like this:
 
 ```python
 limits = Limits(time=1, memory=256 * 1024 * 1024)
 user = await compile(submission)
+
+async def run_test(test):
+    with test:
+        result = await user(stdin=test.input, stdout=output, limits=limits)
+        await checker(test.input, output, test.answer)
+        test.rate(PT(test.points * min(1, 0.1 / result.metrics.time)))
+
 for test in tests:
-    run1_output, run2_input, run2_output = File(), File()
-    user(stdin=test.input, stdout=run1_output, limits=limits)
-    checker(test.input, run1_output, test.answer, stdout=run2_input)
-    user(stdin=run2_input, stdout=run2_output, limits=limits)
-    checker(run2_input, run2_output, test.answer)
+    asyncio.create_task(run_test(test))
+```
+
+This demonstrates that the return value of an invocation is an `InvocationResult` object, which stores the following information:
+
+- a platform-dependent integral exit status at `exit_code`,
+- metrics, accessible via `metrics.time`, `metrics.memory`, `metrics.real_time`, etc.,
+- the verdict at `verdict` and the comment at `comment` for `testlib` kind.
+
+In this example, the points of a submission on a test are equial to the maximum points of test times `min(1, 0.1 / CPU time used by the submission)`.
+
+
+## 2.9. Raw submissions
+
+Sometimes the user is asked to submit a raw data file for evaluation, not a whole program, but the algorithm that determines the verdict of the submission is so complicated that it is meaningful to use a competitive programming judge rather than your typical quiz service.
+
+As should be obvious already, this is not a tiniest problem for strategies. In fact, all the necessary features have already been described above, and the code is as simple as:
+
+```python
+for test in tests:
+    with test:
+        checker(test.input, submission, test.answer)
 ```
 
 
-## 2.5. Interpretation
+## 2.10. Valuation
 
-As can perhaps be seen already, the strategy script is written in Python, with the following global variables provided in addition to the default ones:
+It is often reasonable to let the judge convert the list of verdicts on tests into a single verdict of the submission: there are test groups and dependencies. However, sometimes the relations and formulae are so bizarre that this must be implemented manually.
 
-- `File`, a class designating a file object and an empty file constructor,
-- `Pipe`, which is basically `File` but for interactive problems,
-- `source`, which is the file submitted by the user as a `File` object,
-- `compile`, an asynchronous function that takes a source file with a known type and emits a binary file,
-- `tests`, which is an iterable designating the multiple test cases,
-- `Limits`, which is a constructor for invocation limits,
-- `checker` and other programs attached to the problem.
+Here's how one might do that:
 
-The syntax for program invocation is `file(*argv, stdin=..., stdout=..., stderr=..., limits=...)`, which returns a future. The default values of `stdin`, `stdout`, and `stderr` are `None`, which is equivalent to `/dev/null` or `NUL`. The default value of `limits` is `Limits()`. The return value (if awaited) is an `InvocationResult` object, which stores the platform-dependent exit code in the `exit_code` attribute, and various metrics, accessible via `metrics.time`, `metrics.time` and other attributes.
+```python
+user = await compile(submission)
 
-The class `Limits` stores the various limitations the program is subject to. The limits are `time` (in seconds) and `memory` (in bytes). Systems MAY implement their own custom limitations. If a limit is not set, its value is implementation-defined.
+async def run_test(test):
+    with test:
+        output = File()
+        await user(stdin=test.input, stdout=output, limits=Limits(time=1, memory=256 * 1024 * 1024))
+        await checker(test.input, output, test.answer)
 
-The class `File` may have a type, whether it is plain data, source code, or an executable file. The various types are described in [4. Types](04-types.md). It tracks role, so to speak, that is, whether it originated from the user input, perhaps via a call to `compile`, or from the problem package. The file may be read from and written to as a normal Python file instance.
+    if isinstance(test.verdict, PT):
+        return test.verdict.points
+    else:
+        return 0
 
-By default, tests are rated in the following way. The programs are executed in the order in which they are specified, and the first failure determines the verdict of the submission on the current test. You may want to read [5. Verdicts](05-verdicts.md).
+test_points = await asyncio.gather(*map(run_test, tests))
 
-- If the program originated from user input, then TLE, MLE, RE, and other errors are directly translated into the verdict.
-- If the program originated from the problem package, then TLE, MLE, and other errors are translated to CF, and otherwise the exit code and stderr are used to determine the appropriate verdict. Exactly how this is done depends on the type of the program.
+#
+# Manually:
+#
+if min(test_points) == 0:
+    points = 0
+else:
+    # Harmonic mean
+    points = len(test_points) / (sum(1 / x for x in test_points))
 
-The script can rate the tests manually by calling `test.rate(verdict, comment=...)`, with the `comment` field optional. The verdicts are global variables named `OK`, `RE`, etc., with the exception of `PT`, which should be used as `PT(points)` instead of plain `PT`.
+submission.rate(PT(points))
 
-The invoked programs do not have to be executed sequentially. In fact, judges MUST support program-level parallelism (for interactive problems), and they MAY support test-level parallelism. If a program is invoked while any a program's arguments or its `stdin` are still being written to, the invocation is delayed until the other program that writes to that file terminates.
+#
+# ...or with a call to an external program:
+#
+f = File()
+f.write(f"{len(test_points)}\n".encode())
+for x in test_points:
+    f.write(f"{x}\n".encode())
+
+await valuer(f)
+```
+
+There is only one new detail here: the `submission.rate` method. It takes the same arguments as `test.rate`, including an optional comment.
+
+
+## 2.11. Grading
+
+This is similar to the example provided for arbitrary compilation:
+
+```python
+limits = Limits(time=1, memory=256 * 1024 * 1024)
+
+if submission.type.matches("cpp.*"):
+    grader = grader_cpp
+elif submission.type.matches("python.*"):
+    grader = grader_python
+else:
+    submission.rate(CE, comment="Only C++ and Python programs are supported")
+    return
+
+user = await compile(submission, grader, kind="testlib")
+
+for test in tests:
+    with test:
+        output = File()
+        user(stdin=test.input, stdout=output, limits=limits)
+        checker(test.input, output, test.answer)
+```
+
+In this example, we support graders for multiple languages. Exactly how multi-file compilation works depends on the language and is described thoroughly in [3. Compilation](03-compilation.md).
+
+The author believes that the illustrations were more than enough to help problemsetters write strategies and help judge developers comprehend them.

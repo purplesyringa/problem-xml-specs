@@ -124,7 +124,14 @@ A `Test` is a Python context manager, which means it can be passed as an argumen
 
 A `File` object can be created using the `File()` constructor, which creates a file of unknown type. The type can be passed at construction time via `File(type="...")`.
 
-An `Executable` object can be invoked by calling the object directly: `executable(*argv, stdin=..., stdout=..., stderr=...)`. An item of `argv` can be a string, a `bytes` object, a `File`, or a `Pipe`, which is described in the next section. If an item is a `File` or a `Pipe`, the path to the object on the filesystem is passed as an argument. The default values of `stdin`, `stdout`, and `stderr` are `None`, which is equivalent to writing to or reading from `/dev/null` or `NUL`. The default value of `limits` is `Limits()`. This returns an asynchronous future. Even if it is not awaited, the invocation is still performed.
+An `Executable` object can be invoked by calling the object directly: `executable(*argv, stdin=..., stdout=..., stderr=..., files=..., limits=...)`:
+
+- An item of `argv` can be a string, a `bytes` object, a `File`, and also a `Pipe`, which is described in the next section. If an item is a `File` or a `Pipe`, the path to the object on the filesystem is passed as an argument.
+- The default values of `stdin`, `stdout`, and `stderr` are `None`, which is equivalent to writing to or reading from `/dev/null`, `NUL`, or equivalent.
+- `files` is an optional dictionary of relative path to `File` mapping. If it is specified, the user program will be able to access the provided files at the given paths.
+- The default value of `limits` is `Limits()`.
+
+The function returns an asynchronous future. Invocation is performed even if the future is not awaited.
 
 If a `File` passed within `argv` or via `stdin` to an executable is being written to at the moment (by another executable), invocation is implicitly delayed until the latter executable terminates.
 
@@ -154,7 +161,25 @@ for test in tests:
 In this example, there is a new kind of object: `Pipe`. A `Pipe` refers to a named PIPE or an equivalent object, depending on the platform. A `Pipe` is not subject to the reader-after-writer feature of `File`. `Pipe`s are unidirectional: if a pipe is passed to an executable via `stdout` or `stderr`, only the write end is passed, and if it is passed via `argv` and `stdin`, only the read end is passed. If the write end of `pipe` is to be passed via `argv`, `pipe.as_writable()` should be passed instead.
 
 
-## 2.6. Archives
+## 2.6. Custom file names
+
+In some old programs, the user is expected to read from `input.txt` and output to `output.txt` instead of using standard streams. This can be implemented as follows:
+
+```python
+limits = Limits(time=1, memory=256 * 1024 * 1024)
+user = await compile(submission)
+
+for test in tests:
+    with test:
+        output = File()
+        user(stdin=test.input, stdout=output, limits=limits, files={"input.txt": test.input, "output.txt": output})
+        checker(test.input, output, test.answer)
+```
+
+Note that in this example, we allow the user to read from both stdin and `input.txt`, and write to boht stdout and `output.txt` (though not at once unless buffering is disabled). The author believes this is more correct than only supporting file I/O.
+
+
+## 2.7. Archives
 
 The strategy for a typical output-only problem looks as follows:
 
@@ -183,7 +208,7 @@ If no program fails, the verdict is considered OK, unless any program of kind `t
 The strategy can overwrite the verdict via a call to `test.rate`. This function takes a verdict, and then a comment as an optional argument. The verdicts are global variables named `OK`, `RE`, etc., as described in [0. Verdict](00-verdict.md), with the exception of `PT`, which is to be initialized as `PT(points)`. The verdict can later be accessed via the `test.verdict`, and the comment via `test.comment`.
 
 
-## 2.7. Arbitrary compilation
+## 2.8. Arbitrary compilation
 
 If different code has to be linked into the program supplied by the user, the strategy may look as follows:
 
@@ -210,7 +235,7 @@ If compilation fails during per-test judgement, `compile` raises `AbortedExcepti
 Note that this assumes that the programs at `submission` and `test.code` are written in the same language. If that isn't so, CE verdict will be raised.
 
 
-## 2.8. Efficiency-rated problems
+## 2.9. Efficiency-rated problems
 
 If problemsetters wanted to rate solutions based on the time it takes for them to execute, their strategies could look like this:
 
@@ -237,7 +262,7 @@ This demonstrates that the return value of an invocation is an `InvocationResult
 In this example, the points of a submission on a test are equial to the maximum points of test times `min(1, 0.1 / CPU time used by the submission)`.
 
 
-## 2.9. Raw submissions
+## 2.10. Raw submissions
 
 Sometimes the user is asked to submit a raw data file for evaluation, not a whole program, but the algorithm that determines the verdict of the submission is so complicated that it is meaningful to use a competitive programming judge rather than your typical quiz service.
 
@@ -250,7 +275,7 @@ for test in tests:
 ```
 
 
-## 2.10. Valuation
+## 2.11. Valuation
 
 It is often reasonable to let the judge convert the list of verdicts on tests into a single verdict of the submission: there are test groups and dependencies. However, sometimes the relations and formulae are so bizarre that this must be implemented manually.
 
@@ -297,7 +322,7 @@ await valuer(f)
 There is only one new detail here: the `submission.rate` method. It takes the same arguments as `test.rate`, including an optional comment.
 
 
-## 2.11. Grading
+## 2.12. Grading
 
 This is similar to the example provided for arbitrary compilation:
 
@@ -323,4 +348,6 @@ for test in tests:
 
 In this example, we support graders for multiple languages. Exactly how multi-file compilation works depends on the language and is described thoroughly in [3. Compilation](03-compilation.md).
 
-The author believes that the illustrations were more than enough to help problemsetters write strategies and help judge developers comprehend them.
+---
+
+The author believes that all the illustrations were more than enough to help problemsetters write strategies and help judge developers comprehend them.

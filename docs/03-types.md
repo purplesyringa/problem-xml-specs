@@ -274,7 +274,7 @@ The format identifier `macho` is appointed to the Mach-O format. It supports all
 The only supported platform is `macos`.
 
 
-### 3.4.3. PE
+### 3.4.4. PE
 
 The format identifier `pe` is appointed to the Portable Executable format. It supports all three kinds: `exe` for executables, `dylib` for .dll files, and `obj` for .obj files.
 

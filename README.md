@@ -1,6 +1,6 @@
 # problem.xml specification
 
-**[Start reading &rarrow;](docs/01-backbone.md)**
+**[Start reading &rightarrow;](docs/01-backbone.md)**
 
 This repository contains the specification of the **problem.xml format** for competitive competition problems.
 

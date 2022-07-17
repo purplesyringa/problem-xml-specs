@@ -11,8 +11,8 @@ Source types contain information about what language and compiler the files are 
 - `python`, `c`,
 - `python.cpython`, `c.gcc`,
 - `python=3.cpython`, `c=90.gcc`,
-- `python=3-7.cpython`, `c=90.gcc=9-4-0`.
-- `c=90.gcc=9-4-0.amd64`.
+- `python=3-7.cpython`, `c=90.gcc=9-4-0`,
+- `c=90.gcc=9-4-0.amd64`,
 - `c=90.gcc=9-4-0.amd64.posix`.
 
 Formally, the full form of a source type looks like `{LANGUAGE}={LANGUAGE-VERSION}.{IMPLEMENTATION}={IMPLEMENTATION-VERSION}.{ARCH}.{PLATFORM}`. As the dot sign is already used, the dots in version fields MUST be replaced with dashes.
@@ -76,7 +76,7 @@ This standard assigns types to some common languages and implementations. If a l
 
 ### 3.3.1. C
 
-The language identifier `c` is appointed to the C programming language. Versions of the language are versions of the ISO standard: `c=90` is ISO C90, `c=17` is ISO C17, and so on. For GCC extensions, `c=gnu-90` and alike should be used.
+The language identifiers `c` and `h` are appointed to the C programming language. The former is used for source files, while the latter is used for header files. Versions of the two languages are versions of the ISO standard: `c=90` is ISO C90, `c=17` is ISO C17, and so on. For GCC extensions, `c=gnu-90` and alike should be used.
 
 The implementation identifier `gcc` is assigned to the GNU C Compiler (e.g. `c.gcc=9-4-0` for GCC 9.4.0), `clang` is assigned to Clang (e.g. `c.clang=10-0-0` for Clang 10.0.0), `msvc` is assigned to the Microsoft C compiler (e.g. `c.msvc=7.0` for MSC 7.0), and `icc` is assigned to the Intel C Compiler (e.g. `c.icc=19.0`). The default implementation is `gcc`.
 
@@ -87,7 +87,7 @@ Additionally, the following type SHOULD be recognized:
 
 ### 3.3.2. C++
 
-The language identifier `cpp` is appointed to the C++ programming language. Versions of the language are versions of the ISO standard: `cpp=17` is C++17, and so on. For GCC extensions, `cpp=gnu-17` and alike should be used.
+The language identifiers `cpp` and `hpp` are appointed to the C++ programming language. The former is used for source files, while the latter is used for header files. Versions of the language are versions of the ISO standard: `cpp=17` is C++17, and so on. For GCC extensions, `cpp=gnu-17` and alike should be used.
 
 The implementation identifier `gcc` is assigned to GCC, `clang` is assigned to Clang, `msvc` is assigned to the Microsoft Visual C++ compiler, and `icc` is assigned to the Intel C++ Compiler (e.g. `cpp.icc=19.0`). The legacy identifier `g++` is an alias for `gcc` and SHOULD NOT be used in new problems. The default implementation is `gcc`.
 

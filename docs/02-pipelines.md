@@ -106,9 +106,9 @@ As can perhaps be seen already, the strategy script is written in Python, with s
 
 Firstly, `submission` is the file sent to the judge by the user.
 
-Its Python type is `File`. `File` is a container for any sort of raw data. `File` can store the type of the contained file as specified in [100. Types](100-types.md). This type can be accessed and modified via the `type` property, which stores an instance of `Type`. `Type` can be constructed using `Type("...")`, converted to a string using `str(...)`, and matched with a mask using `type.matches("...")`.
+Its Python type is `File`. `File` is a container for any sort of raw data. `File` can store the type of the contained file as specified in [3. Types](03-types.md). This type can be accessed and modified via the `type` property, which stores an instance of `Type`. `Type` can be constructed using `Type("...")`, converted to a string using `str(...)`, and matched with a mask using `type.matches("...")`.
 
-`compile` is an asynchronous function that takes a source file with a known type as a `File` object and emits an executable file. The type of the result if `Executable`.
+`compile` is an asynchronous function that takes a source file with a known type as a `File` object (or several source files) and emits an executable file. The type of the result is `Executable`.
 
 `Executable` usually represents a single file that is stored as a `File` object in the `main_file` attribute. However, in some cases an executable object may consist of several files. In this case `main_file` will only store one file, and the list of files along with their names is stored in the `files` attribute of type `dict[str, File]` (including `main_file` itself).
 
@@ -232,7 +232,7 @@ Several source code files are passed to `compile`. As they are of different kind
 
 If compilation fails during per-test judgement, `compile` raises `AbortedException`, which is swallowed by `with test`, and this failure is translated to CE verdict on the test.
 
-Note that this assumes that the programs at `submission` and `test.code` are written in the same language. If that isn't so, CE verdict will be raised.
+Note that this assumes that the programs at `submission` and `test.code` are written in the same language. If that isn't so, CE verdict MAY be raised, unless the judge supports cross-language compilation, which is described in [3. Compilation](03-compilation.md).
 
 
 ## 2.9. Efficiency-rated problems
@@ -329,15 +329,15 @@ This is similar to the example provided for arbitrary compilation:
 ```python
 limits = Limits(time=1, memory=256 * 1024 * 1024)
 
-if submission.type.matches("cpp.*"):
-    grader = grader_cpp
-elif submission.type.matches("python.*"):
-    grader = grader_python
+if submission.type.matches("cpp"):
+    files = [submission, grader_cpp, grader_h]
+elif submission.type.matches("python^3"):
+    files = [submission, grader_python]
 else:
     submission.rate(CE, comment="Only C++ and Python programs are supported")
     return
 
-user = await compile(submission, grader, kind="testlib")
+user = await compile(*files, kind="testlib")
 
 for test in tests:
     with test:
@@ -346,7 +346,9 @@ for test in tests:
         checker(test.input, output, test.answer)
 ```
 
-In this example, we support graders for multiple languages. Exactly how multi-file compilation works depends on the language and is described thoroughly in [3. Compilation](03-compilation.md).
+In this example, we support graders for multiple languages. This is the first time we used explicit type identifiers. Although the behavior of this particular strategy is obvious, you should probably take a look at [3. Types](03-types.md).
+
+`compile` is called with several operands. Exactly how multi-file compilation works depends on the language and is described thoroughly in [3. Compilation](03-compilation.md).
 
 ---
 

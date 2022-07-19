@@ -91,7 +91,7 @@ The language identifiers `cpp` and `cpp-h` are appointed to the C++ programming 
 
 The implementation identifier `gcc` is assigned to GCC, `clang` is assigned to Clang, `msvc` is assigned to the Microsoft Visual C++ compiler, and `icc` is assigned to the Intel C++ Compiler (e.g. `cpp.icc=19.0`). The legacy identifier `g++` is an alias for `gcc` and SHOULD NOT be used in new problems. The default implementation is `gcc`.
 
-For compilres with enabled diagnostics, `-diagnostics` is appended to the version of the implementation.
+For compilers with enabled diagnostics, `-diagnostics` is appended to the version of the implementation.
 
 Additionally, the following types SHOULD be recognized:
 
@@ -104,7 +104,14 @@ Additionally, the following types SHOULD be recognized:
 - `h.g++`, meaning `cpp-h`.
 
 
-### 3.3.3. C#
+### 3.3.3. Common Lisp
+
+The language identifier `cl` is appointed to the Common Lisp programming language. The only version of the standard is `default`, referring to ANSI INCITS 226-1994.
+
+The implementation identifier `clisp` is assigned to CLISP, `ccl` is assigned to Clozure CL, and `gcl` is assigned to GNU Common Lisp. The default implementation is `clisp`.
+
+
+### 3.3.4. C#
 
 The language identifier `csharp` is appointed to the C# programming language. The versions match the official releases.
 
@@ -115,28 +122,56 @@ Additionally, the following type SHOULD be recognized:
 - `csharp.visual`, meaning `csharp`.
 
 
-### 3.3.4. D
+### 3.3.5. D
 
 The language identifier `d` is appointed to the D programming language. The versions match the official releases.
 
 The implementation identifier `dmd` is assigned to DMD, `gdc` is assigned to the GNU D Compiler, and `ldc` is assigned to the LLVM-based D Compiler. The default implementation is `dmd`.
 
 
-### 3.3.5. Go
+### 3.3.6. Dart
+
+The language identifier `dart` is appointed to the Dart programming language. The versions match the official releases.
+
+The one and only implementation identifier is `dart`, with version matching that of the language. Ergo this is the default implementation.
+
+
+### 3.3.7. Elixir
+
+The language identifier `elixir` is appointed to the Elixir programming language. The versions match the official releases.
+
+The one and only implementation identifier is `elixir`, with version matching that of the language. Ergo this is the default implementation.
+
+
+### 3.3.8. Erlang
+
+The language identifier `erlang` is appointed to the Erlang programming language. The versions match the official releases.
+
+The one and only implementation identifier is `erlang`, with version matching that of the language. Ergo this is the default implementation.
+
+
+### 3.3.9. Fortran
+
+The language identifier `fortran` is appointed to the Fortran programming language. The versions are `90`, `95`, `2003`, `2008`, and `2018`.
+
+The only implementation identifier supported at the moment is `gfortran`. Ergo this is the default implementation.
+
+
+### 3.3.10. Go
 
 The language identifier `go` is appointed to the Go programming language. The versions match the official releases.
 
 The implementation identifier `go` is assigned to the official Go compiler, and `gccgo` is assigned to the GNU Go Compiler. The default implementation is `go`.
 
 
-### 3.3.6. Haskell
+### 3.3.11. Haskell
 
 The language identifier `haskell` is appointed to the Haskell programming language. `1-0` till `1-4`, `98`, and `2010` are supported versions of the language.
 
 The implementation identifier `ghc` is assigned to the Glorious Glasgow Haskell Compilation System, `uhc` is assigned to the Utrecht Haskell Compiler, and `lhc` is assigned to the LLVM Haskell Compiler. The default implementation is `ghc`.
 
 
-### 3.3.7. Java
+### 3.3.12. Java
 
 The language identifier `java` is appointed to the Java programming language. The versions match the official releases of Java SE.
 
@@ -148,7 +183,7 @@ Additionally, the following types SHOULD be recognized:
 - `java8`, meaning `java=8`.
 
 
-### 3.3.8. JavaScript
+### 3.3.13. JavaScript
 
 The language identifier `javascript` is appointed to the ECMAScript programming language. The versions match the editions of the standard, e.g. `2017` for ES2017.
 
@@ -160,7 +195,7 @@ Additionally, the following types SHOULD be recognized:
 - `nodejs`, meaning `javascript.node`.
 
 
-### 3.3.9. Kotlin
+### 3.3.14. Kotlin
 
 The language identifier `kotlin` is appointed to the Kotlin programming language. The versions match the official releases.
 
@@ -171,14 +206,28 @@ Additionally, the following type SHOULD be recognized:
 - `kotlin16`, meaning `kotlin=1-6-0`.
 
 
-### 3.3.10. OCaml
+### 3.3.15. Lua
+
+The language identifier `lua` is appointed to the Lua programming language. The versions match the official releases.
+
+The one and only implementation identifier is `lua`, with version matching that of the language. Ergo this is the default implementation.
+
+
+### 3.3.16. Nim
+
+The language identifier `nim` is appointed to the Nim programming language. The versions match the official releases.
+
+The one and only implementation identifier is `nim`, with version matching that of the language. Ergo this is the default implementation.
+
+
+### 3.3.17. OCaml
 
 The language identifier `ocaml` is appointed to the OCaml programming language. The versions match the official releases.
 
 The implementation identifier `opt` is assigned to `ocamlopt`, and `bytecode` is assigned to `ocamlc`. The default implementation is `opt`.
 
 
-### 3.3.11. Pascal
+### 3.3.18. Pascal
 
 The language identifier `pas` is appointed to the Pascal programming language. The only version of the standard is `default`, referring to ISO 7185.
 
@@ -189,21 +238,21 @@ Additionally, the following type SHOULD be recognized:
 - `delphi.borland`, meaning `pascal.dpr`.
 
 
-### 3.3.12. Perl
+### 3.3.19. Perl
 
 The language identifier `perl` is appointed to the Perl programming language. The versions match the official releases. Perl 6 is `raku`, not `perl=6`.
 
 The one and only implementation identifier is `perl`, with version matching that of the language. Ergo this is the default implementation.
 
 
-### 3.3.13. PHP
+### 3.3.20. PHP
 
 The language identifier `php` is appointed to the PHP programming language. The versions match the official releases.
 
 The one and only implementation identifier is `php`, with version matching that of the language. Ergo this is the default implementation.
 
 
-### 3.3.14. Python
+### 3.3.21. Python
 
 The language identifier `python` is appointed to the Python programming language. The versions match the official releases.
 
@@ -221,28 +270,28 @@ Additionally, the following types SHOULD be recognized:
 - `pypy3`, meaning `python^3.pypy`.
 
 
-### 3.3.15. Raku
+### 3.3.22. Raku
 
 The language identifier `raku` is appointed to the Raku programming language, formerly known as Perl 6. The versions match the official releases.
 
 The one and only implementation identifier is `raku`, with version matching that of the language. Ergo this is the default implementation.
 
 
-### 3.3.16. Ruby
+### 3.3.23. Ruby
 
 The language identifier `ruby` is appointed to the Ruby programming language. The versions match the official releases.
 
 The one and only implementation identifier is `ruby`, with version matching that of the language. Ergo this is the default implementation.
 
 
-### 3.3.17. Rust
+### 3.3.24. Rust
 
 The language identifier `rust` is appointed to the Rust programming language. The versions are `{EDITION}-{VERSION}`, where `{EDITION}` is the year, and `{VERSION}` matches the official releases.
 
 The implementation identifier `rustc` is assigned to the official compiler, and `mrustc` is assigned to [mrustc](https://github.com/thepowersgang/mrustc). The default implementation is `rustc`. Versions of rustc are equal to those of the language itself, but without the `{EDITION}-` prefix. Nightly versions have `-nightly` suffix.
 
 
-### 3.3.18. Scala
+### 3.3.25. Scala
 
 The language identifier `scala` is appointed to the Scala programming language. The versions match the official releases.
 

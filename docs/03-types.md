@@ -123,6 +123,7 @@ The implementation identifier `clisp` is assigned to CLISP, `ccl` is assigned to
 
 As Common Lisp is an oversimple language, the following Quicklisp modules SHOULD be provided:
 
+- [bordeaux-threads](https://github.com/sionescu/bordeaux-threads),
 - [cl-containers](https://cl-containers.common-lisp.dev/),
 - [cl-data-structures](https://sirherrbatka.github.io/cl-data-structures/main.html),
 - [fset](https://quickdocs.org/fset),

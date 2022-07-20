@@ -131,3 +131,12 @@ RETURN_TYPE FUNCTION_NAME(ARG1_TYPE ARG1_NAME, ARG2_TYPE ARG2_NAME, ...);
 Variadic and default parameters are not allowed. Overloading isn't either.
 
 Note that such formalized definition enables automatic signature generation for all languages.
+
+
+## 5.5. Security measures
+
+There are several ways to implement secure graders. This document does not require the judge developers to choose any particular way, leaving it to their own best judgement.
+
+One possibility is to use process isolation: one process would run the user code and the other process would run the grader code. Fake functions would be made available that would send the commands between the two. The grader process might run under a different user or with PR_SET_DUMPABLE reset to stop the user from accessing grader data.
+
+Another possibility is architecture-dependent and involves the user of protecting rings. In x86 and x86-64, the kernel typically runs at ring 0 and userland uses ring 3. If the memory pages used by the grader were ring 2, the user program would not be allowed to access grader data directly, only by explicitly configured call gates.

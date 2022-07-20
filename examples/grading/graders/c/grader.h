@@ -1,0 +1,1 @@
+int guess(int num);

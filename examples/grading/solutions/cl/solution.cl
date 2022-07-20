@@ -1,0 +1,6 @@
+(defun solve (n) (solve-range 1 n))
+(defun solve-range (l r)
+    (let* ((m (floor (+ l r) 2))
+           (result (guess m)))
+        (cond ((= result -1) (solve-range l (1- m)))
+              ((= result 1) (solve-range (1+ m) r)))))

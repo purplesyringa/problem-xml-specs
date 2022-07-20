@@ -1,13 +1,14 @@
 #include <stdio.h>
+#include <stdatomic.h>
 
 static int answer;
-static int n_guesses;
+static atomic_int n_guesses;
 static int success;
 
 void solve(int n);
 
 int guess(int num) {
-	n_guesses++;
+	atomic_fetch_add(&n_guesses, 1);
 	if(answer < num) {
 		return -1;
 	} else if(answer > num) {

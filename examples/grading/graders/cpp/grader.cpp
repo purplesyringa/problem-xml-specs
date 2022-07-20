@@ -1,7 +1,8 @@
 #include <iostream>
+#include <atomic>
 
 static int answer;
-static int n_guesses;
+static std::atomic_int n_guesses;
 static bool success;
 
 void solve(int n);

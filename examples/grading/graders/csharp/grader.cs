@@ -4,7 +4,7 @@ public class Grader {
 	private static int success;
 
 	public static int Guess(int num) {
-		n_guesses++;
+		System.Threading.Interlocked.Increment(ref n_guesses);
 		if(answer < num) {
 			return -1;
 		} else if(answer > num) {

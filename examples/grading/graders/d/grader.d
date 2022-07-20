@@ -1,3 +1,4 @@
+import core.atomic;
 import std.array;
 import std.conv;
 import std.stdio;
@@ -9,7 +10,7 @@ private int n_guesses;
 private int success;
 
 int guess(int num) {
-	n_guesses++;
+	atomicFetchAdd(n_guesses, 1);
 	if(answer < num) {
 		return -1;
 	} else if(answer > num) {

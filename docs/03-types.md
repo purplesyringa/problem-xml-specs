@@ -121,6 +121,18 @@ The language identifier `cl` is appointed to the Common Lisp programming languag
 
 The implementation identifier `clisp` is assigned to CLISP, `ccl` is assigned to Clozure CL, and `gcl` is assigned to GNU Common Lisp. The default implementation is `clisp`.
 
+As Common Lisp is an oversimple language, the following Quicklisp modules SHOULD be provided:
+
+- [cl-containers](https://cl-containers.common-lisp.dev/),
+- [cl-data-structures](https://sirherrbatka.github.io/cl-data-structures/main.html),
+- [fset](https://quickdocs.org/fset),
+- [genhash](https://github.com/pnathan/genhash),
+- [hash-set](https://github.com/samebchase/hash-set),
+- [listopia](https://github.com/Dimercel/listopia),
+- [pileup](https://nikodemus.github.io/pileup/),
+- [str](https://github.com/vindarel/cl-str),
+- [syscamore](https://ndantam.github.io/sycamore/).
+
 
 ### 3.3.5. D
 
@@ -156,6 +168,8 @@ The language identifier `fortran` is appointed to the Fortran programming langua
 
 The only implementation identifier supported at the moment is `gfortran`. Ergo this is the default implementation.
 
+As Fortran does not have a built-in standard library, the [unofficial stdlib](https://stdlib.fortran-lang.org/) SHOULD be provided.
+
 
 ### 3.3.10. Go
 
@@ -169,6 +183,18 @@ The implementation identifier `go` is assigned to the official Go compiler, and 
 The language identifier `haskell` is appointed to the Haskell programming language. `1-0` till `1-4`, `98`, and `2010` are supported versions of the language.
 
 The implementation identifier `ghc` is assigned to the Glorious Glasgow Haskell Compilation System, `uhc` is assigned to the Utrecht Haskell Compiler, and `lhc` is assigned to the LLVM Haskell Compiler. The default implementation is `ghc`.
+
+Additionally, the following packages SHOULD be available:
+
+- array,
+- bytestring,
+- containers,
+- heaps,
+- mtl,
+- random,
+- text,
+- unordered-containers,
+- vector.
 
 
 ### 3.3.12. Java
@@ -233,6 +259,8 @@ The language identifier `pas` is appointed to the Pascal programming language. T
 
 The implementation identifier `fpc` is assigned to Free Pascal, `dpr` is assigned to Delphi, `abc` is assigned to PascalABC.NET, and `borland` is assigned to Turbo (Borland) Pascal. The default implementation is `fpc`.
 
+For Free Pascal, the Free Component Library SHOULD be available.
+
 Additionally, the following type SHOULD be recognized:
 
 - `delphi.borland`, meaning `pascal.dpr`.
@@ -250,6 +278,8 @@ The one and only implementation identifier is `perl`, with version matching that
 The language identifier `php` is appointed to the PHP programming language. The versions match the official releases.
 
 The one and only implementation identifier is `php`, with version matching that of the language. Ergo this is the default implementation.
+
+The extensions SPL and DS SHOULD be available.
 
 
 ### 3.3.21. Python
@@ -289,6 +319,20 @@ The one and only implementation identifier is `ruby`, with version matching that
 The language identifier `rust` is appointed to the Rust programming language. The versions are `{EDITION}-{VERSION}`, where `{EDITION}` is the year, and `{VERSION}` matches the official releases.
 
 The implementation identifier `rustc` is assigned to the official compiler, and `mrustc` is assigned to [mrustc](https://github.com/thepowersgang/mrustc). The default implementation is `rustc`. Versions of rustc are equal to those of the language itself, but without the `{EDITION}-` prefix. Nightly versions have `-nightly` suffix.
+
+The following crates SHOULD be available:
+
+```
+cfg-if = "1.0.0"
+itertools = "0.10.2"
+lazy-static = "1.4.0"
+libc = "0.2"
+nix = "0.24.1"
+pin-project = "1"
+rand = "0.8.5"
+regex = "1.5.6"
+smallvec = "1.9.0"
+```
 
 
 ### 3.3.25. Scala

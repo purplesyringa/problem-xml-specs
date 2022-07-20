@@ -104,14 +104,7 @@ Additionally, the following types SHOULD be recognized:
 - `h.g++`, meaning `cpp-h`.
 
 
-### 3.3.3. Common Lisp
-
-The language identifier `cl` is appointed to the Common Lisp programming language. The only version of the standard is `default`, referring to ANSI INCITS 226-1994.
-
-The implementation identifier `clisp` is assigned to CLISP, `ccl` is assigned to Clozure CL, and `gcl` is assigned to GNU Common Lisp. The default implementation is `clisp`.
-
-
-### 3.3.4. C#
+### 3.3.3. C#
 
 The language identifier `csharp` is appointed to the C# programming language. The versions match the official releases.
 
@@ -120,6 +113,13 @@ The implementation identifier `net` is assigned to the outdated CSC compiler, an
 Additionally, the following type SHOULD be recognized:
 
 - `csharp.visual`, meaning `csharp`.
+
+
+### 3.3.4. Common Lisp
+
+The language identifier `cl` is appointed to the Common Lisp programming language. The only version of the standard is `default`, referring to ANSI INCITS 226-1994.
+
+The implementation identifier `clisp` is assigned to CLISP, `ccl` is assigned to Clozure CL, and `gcl` is assigned to GNU Common Lisp. The default implementation is `clisp`.
 
 
 ### 3.3.5. D

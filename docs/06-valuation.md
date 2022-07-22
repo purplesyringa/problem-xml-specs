@@ -37,7 +37,7 @@ After a submission is graded, a verdict is attached to each test first, rather t
 - **Memory limit exceeded (ML or MLE)**: the submission used more RAM than allowed,
 - **Presentation error (PE)**: the submission stayed within the limits and printed something, but the output could not be parsed due to invalid format,
 - **Idleness limit exceeded (IL or ILE)**: the submission used more real (wall-clock) time than allowed,
-- **Check failed (CF)**: the checker, interactor, or other program returned an invalid exit code, was killed by a singal, or exceeded limits,
+- **Check failed (CF)**: the checker, interactor, or other problem-wide program returned an invalid exit code, was killed by a singal, or exceeded limits,
 - **Compilation error (CE)**: code was compiled during the test rather than before judgement, as can happen in compile-on-each-test problems,
 - **Ignored (IG)**: the judge deemed it unnecessary to run the test because it would not affect the score; this is elaborated upon below.
 
@@ -123,3 +123,44 @@ If points are disabled, the tests that are not attached to any group are assumed
 If the feedback policy is `NONE` and the points policy is `COMPLETE_GROUP`, the judge MAY judge the tests of the group out of order, preferring tests that are more likely to fail first.
 
 Additionally, a group may have **dependencies**, which are other groups that must all be passed for the present group to be judged. Dependencies form a directed acyclic graph. A test from a group a dependency of which did not pass MUST have IG verdict. A group is considered passed if all its tests have verdict OK.
+
+
+## 6.6. Testlib output
+
+Checkers and other program scripts usually use the [testlib](https://codeforces.com/testlib) library.
+
+Testlib checkers are invoked as follows:
+
+```shell
+checker {INPUT-FILE} {PARTICIPANT-OUTPUT-FILE} {JURY-ANSWER-FILE}
+```
+
+Testlib interactors are invoked as follows:
+
+```shell
+interactor {INPUT-FILE} {LOG-FILE} {JURY-ANSWER-FILE} <{PARTICIPANT-STDOUT} >{PARTICIPANT-STDIN}
+```
+
+...and their log files are then passed to the checker as follows:
+
+```shell
+checker {INPUT-FILE} {LOG-FILE} {JURY-ANSWER-FILE}
+```
+
+But of more interest is how testlib programs yield verdicts. The exit code sets the verdict:
+
+- `0` is for OK,
+- `1` is for WA,
+- `2` and `8` are for PE,
+- `3` and `4` are for "graceful" CF (which usually means that the jury solution was deemed incorrect, e.g. if the jury answer was worse than the participant's answer),
+- `7` is for PT.
+
+Standard error stream contains a string representation of the verdict as well as an optional comment. The verdicts map to output as follows:
+
+- OK: `ok {COMMENT}`,
+- WA: `wrong answer {COMMENT}`,
+- PE: `wrong output format {COMMENT}` or `unexpected eof {COMMENT}`,
+- CF: `FAIL {COMMENT}`,
+- PT: `points {POINTS} {COMMENT}`, where `{POINTS}` is a decimal number with `.` separator.
+
+The judge MAY support other exit codes and verdicts. All unsupported exit codes MUST be interpreted as "hard" CF.

@@ -3,7 +3,7 @@
 
 static int answer;
 static std::atomic_int n_guesses;
-static bool success;
+static std::atomic_int success;
 
 void solve(int n);
 
@@ -14,7 +14,7 @@ int guess(int num) {
 	} else if(answer > num) {
 		return 1;
 	} else {
-		success = true;
+		success = 1;
 		return 0;
 	}
 }

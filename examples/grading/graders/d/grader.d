@@ -16,7 +16,7 @@ int guess(int num) {
 	} else if(answer > num) {
 		return 1;
 	} else {
-		success = 1;
+		atomicStore(success, 1);
 		return 0;
 	}
 }
@@ -26,5 +26,5 @@ void main() {
 	int n = to!int(input.split[0]);
 	answer = to!int(input.split[1]);
 	solve(n);
-	writefln("%d %d", n_guesses, success);
+	writefln("%d %d", atomicLoad(n_guesses), atomicLoad(success));
 }

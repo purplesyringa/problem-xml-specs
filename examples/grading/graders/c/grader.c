@@ -3,12 +3,12 @@
 
 static int answer;
 static atomic_int n_guesses;
-static int success;
+static atomic_int success;
 
 void solve(int n);
 
 int guess(int num) {
-	atomic_fetch_add(&n_guesses, 1);
+	n_guesses++;
 	if(answer < num) {
 		return -1;
 	} else if(answer > num) {

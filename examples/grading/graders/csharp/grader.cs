@@ -10,7 +10,7 @@ public class Grader {
 		} else if(answer > num) {
 			return 1;
 		} else {
-			success = 1;
+			System.Threading.Interlocked.Exchange(ref success, 1);
 			return 0;
 		}
 	}
@@ -20,6 +20,10 @@ public class Grader {
 		int n = int.Parse(items[0]);
 		answer = int.Parse(items[1]);
 		Solution.Solve(n);
-		System.Console.WriteLine(n_guesses + " " + success);
+		System.Console.WriteLine(
+			System.Threading.Interlocked.CompareExchange(ref n_guesses, 0, 0)
+			+ " "
+			+ System.Threading.Interlocked.CompareExchange(ref success, 0, 0)
+		);
 	}
 }

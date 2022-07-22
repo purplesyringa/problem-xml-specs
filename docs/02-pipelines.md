@@ -195,7 +195,7 @@ for test in tests:
 
 The `into_archive()` method of a `File` interprets it as a ZIP archive, or another archive type if supported by the judge. The contents of an `Archive` object can be accessed using the indexing operator, which takes the name of the file as the index and returns a `File` object. If there is no such file, `KeyError` is thrown, just like with a normal dictionary.
 
-The verdicts on the tests are usually detected automatically according to the following rules. The list of verdicts is listed in [6. Verdicts](06-verdicts.md). The first executable to fail, if any, determines the verdict:
+The verdicts on the tests are usually detected automatically according to the following rules. The list of verdicts is listed in [6. Valuation](06-valuation.md). The first executable to fail, if any, determines the verdict:
 
 - If the failed program has `user` kind, then TLE, MLE, RE, and other errors are directly translated into the verdict.
 
@@ -205,7 +205,7 @@ The verdicts on the tests are usually detected automatically according to the fo
 
 If no program fails, the verdict is considered OK, unless any program of kind `testlib` sets the verdict to PT, in which case that verdict is assumed. If several programs of kind `testlib` are called and none fails, either all of them MUST return OK, or one of them MUST return PE and all the others OK.
 
-The strategy can overwrite the verdict via a call to `test.rate`. This function takes a verdict, and then a comment as an optional argument. The verdicts are global variables named `OK`, `RE`, etc., as described in [6. Verdicts](06-verdicts.md), with the exception of `PT`, which is to be initialized as `PT(points)`. The verdict can later be accessed via the `test.verdict`, and the comment via `test.comment`.
+The strategy can overwrite the verdict via a call to `test.rate`. This function takes a verdict, and then a comment as an optional argument. The verdicts are global variables named `OK`, `RE`, etc., as described in [6. Valuation](06-valuation.md), with the exception of `PT`, which is to be initialized as `PT(points)`. The verdict can later be accessed via the `test.verdict`, and the comment via `test.comment`.
 
 
 ## 2.8. Arbitrary compilation

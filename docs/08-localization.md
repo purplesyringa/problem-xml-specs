@@ -1,4 +1,4 @@
-# 2. Localization
+# 8. Localization
 
 A problem may have several statements. This feature is commonly used for localization, but other reasons exist. For example, this may serve as an anti-cheating mechanism.
 
@@ -9,7 +9,7 @@ The field `{IDENTIFIER}` can be used to further disambiguate behavior when two s
 Localization applies to tags `<names>`, `<statements>`, and `<tutorials>`, the contents of which are described below. The tag `<tags>` is to be handled differently, but it is also localized.
 
 
-## 2.1. Names
+## 8.1. Names
 
 The tag `<names>` has the following structure:
 
@@ -24,7 +24,7 @@ The tag `<names>` has the following structure:
 `{NAME}` is the name (title) of a problem, which can be arbitrary Unicode string that will be shown to the user in the judge interface.
 
 
-## 2.2. Statements
+## 8.2. Statements
 
 The tag `<statements>` has the following structure:
 
@@ -60,12 +60,12 @@ Various examples:
 ```
 
 
-## 2.3. Tutorials
+## 8.3. Tutorials
 
 The tag `<tutorials>` has the exact same structure as the `<statements>` tag, except that `<tutorial>` is used instead of `<statement>`.
 
 
-## 2.4. Tags
+## 8.4. Tags
 
 The tag `<tags>` has the following structure:
 

@@ -118,7 +118,7 @@ Executables that are attached to the problem, such as checkers and validators, a
 
 `tests` is a global iterable of all tests of a program. It will not necessarily be a `list`, but it can be iterated by, yielding instances of `Test`.
 
-A `Test` object has a property called `no`, which stores the ID of test, usually in 1-indexation. It also *usually* has properties `input` and `answer`, each of type `File`, but these properties may not be present, or other properties may be, if the problem is of a non-standard type--this is configurable.
+A `Test` object has a property called `no`, which stores the ID of test, usually in 1-indexation. It also *usually* has properties `input` and `answer`, each of type `File`, also `points` of type `float` in IOI-style problems and `group` of type `Group` if groups are enabled, but these properties may not be present, or other properties may be, if the problem is of a non-standard type--this is configurable.
 
 A `Test` is a Python context manager, which means it can be passed as an argument to the `with` statement. Per-test operations MUST be wrapped in `with test`.
 
@@ -195,7 +195,7 @@ for test in tests:
 
 The `into_archive()` method of a `File` interprets it as a ZIP archive, or another archive type if supported by the judge. The contents of an `Archive` object can be accessed using the indexing operator, which takes the name of the file as the index and returns a `File` object. If there is no such file, `KeyError` is thrown, just like with a normal dictionary.
 
-The verdicts on the tests are usually detected automatically according to the following rules. The list of verdicts is listed in [0. Verdict](00-verdict.md). The first executable to fail, if any, determines the verdict:
+The verdicts on the tests are usually detected automatically according to the following rules. The list of verdicts is listed in [6. Verdicts](06-verdicts.md). The first executable to fail, if any, determines the verdict:
 
 - If the failed program has `user` kind, then TLE, MLE, RE, and other errors are directly translated into the verdict.
 
@@ -205,7 +205,7 @@ The verdicts on the tests are usually detected automatically according to the fo
 
 If no program fails, the verdict is considered OK, unless any program of kind `testlib` sets the verdict to PT, in which case that verdict is assumed. If several programs of kind `testlib` are called and none fails, either all of them MUST return OK, or one of them MUST return PE and all the others OK.
 
-The strategy can overwrite the verdict via a call to `test.rate`. This function takes a verdict, and then a comment as an optional argument. The verdicts are global variables named `OK`, `RE`, etc., as described in [0. Verdict](00-verdict.md), with the exception of `PT`, which is to be initialized as `PT(points)`. The verdict can later be accessed via the `test.verdict`, and the comment via `test.comment`.
+The strategy can overwrite the verdict via a call to `test.rate`. This function takes a verdict, and then a comment as an optional argument. The verdicts are global variables named `OK`, `RE`, etc., as described in [6. Verdicts](06-verdicts.md), with the exception of `PT`, which is to be initialized as `PT(points)`. The verdict can later be accessed via the `test.verdict`, and the comment via `test.comment`.
 
 
 ## 2.8. Arbitrary compilation
@@ -232,7 +232,7 @@ Several source code files are passed to `compile`. As they are of different kind
 
 If compilation fails during per-test judgement, `compile` raises `AbortedException`, which is swallowed by `with test`, and this failure is translated to CE verdict on the test.
 
-Note that this assumes that the programs at `submission` and `test.code` are written in the same language. If that isn't so, CE verdict MAY be raised, unless the judge supports cross-language compilation, which is described in [3. Compilation](03-compilation.md).
+Note that this assumes that the programs at `submission` and `test.code` are written in the same language. If that isn't so, CE verdict MAY be raised, unless the judge supports cross-language compilation, which is described in [4. Compilation](04-compilation.md).
 
 
 ## 2.9. Efficiency-rated problems
@@ -277,7 +277,7 @@ for test in tests:
 
 ## 2.11. Valuation
 
-It is often reasonable to let the judge convert the list of verdicts on tests into a single verdict of the submission: there are test groups and dependencies. However, sometimes the relations and formulae are so bizarre that this must be implemented manually.
+It is often reasonable to let the judge convert the list of verdicts on tests into a single verdict of the submission: there are test groups and dependencies, which the judge takes care about as described in [6. Valuation](06-valuation.md). However, sometimes the relations and formulae are so bizarre that this must be implemented manually.
 
 Here's how one might do that:
 
@@ -290,7 +290,9 @@ async def run_test(test):
         await user(stdin=test.input, stdout=output, limits=Limits(time=1, memory=256 * 1024 * 1024))
         await checker(test.input, output, test.answer)
 
-    if isinstance(test.verdict, PT):
+    if test.verdict is OK:
+        return test.points
+    elif isinstance(test.verdict, PT):
         return test.verdict.points
     else:
         return 0
@@ -348,7 +350,15 @@ for test in tests:
 
 In this example, we support graders for multiple languages. This is the first time we used explicit type identifiers. Although the behavior of this particular strategy is obvious, you should probably take a look at [3. Types](03-types.md).
 
-`compile` is called with several operands. Exactly how multi-file compilation works depends on the language and is described thoroughly in [3. Compilation](03-compilation.md).
+`compile` is called with several operands. Exactly how multi-file compilation works depends on the language and is described thoroughly in [4. Compilation](04-compilation.md).
+
+
+## 2.13. Groups
+
+As described in [6. Valuation](06-valuation.md), tests can be divided into groups.
+
+The group name of a test is accessible via `test.group`. The global object `groups` is a dictionary with string keys and `Group` values. A `Group` object contains the `tests` property, which is a subset of `tests` contained in the group, and the `name` property, as well as string `points_policy` and `feedback_policy` attributes and the `dependencies` attribute of type `List[Test]`.
+
 
 ---
 

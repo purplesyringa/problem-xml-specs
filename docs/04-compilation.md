@@ -137,7 +137,7 @@ Internally, libraries are not any different from graders, except that the user c
 
 It would be reasonable for the compilation step to consist of compiling all the given source code files into a single executable, and that's it. However, it is seldom this trivial.
 
-Firstly, the user and problem code have to somehow interact with each other.
+Firstly, if the problem reveals a grader or a library, the user and problem code have to somehow interact with each other.
 
 Some programming languages (e.g. Java) use module or class names to access other source files, and this means that problem-provided objects have to have fixed names and be able to learn how to access the submission code.
 
@@ -145,9 +145,11 @@ Other languages use paths, and this means that the problem-provided files have t
 
 Except that some languages require the file name to match the module name, which complicates matters even more.
 
-To add insult to injury, many languages have a notion of a "main" file, e.g. Python and Rust. This means that the problemsetter has to specify the entrypoint explicitly. In simple problems that don't provide graders or libraries, there is only one module--the user's submission--and so the entrypoint is obvious. When the problem provides source files, though, the choice is less clear.
+Besides, many languages have a notion of a "main" file, e.g. Python and Rust. This means that the problemsetter has to specify the **entrypoint file** explicitly. In simple problems that don't provide graders or libraries, there is only one module--the user's submission--and so the entrypoint is obvious. When the problem provides source files, though, the choice is less clear.
 
-This section explains how officially supported languages are to be handled and how cross-file communication is performed.
+To put the cherry on top of the cake, it is sometimes necessary to compile two files written in different languages together, as elaborated upon in [5. Grading](05-grading.md).
+
+This section explains how officially supported languages are to be handled, and how cross-file communication is performed.
 
 
 ### 4.2.1. C
@@ -185,4 +187,4 @@ The D programming language supports passing multiple source files to the compile
 
 ### 4.2.6. Dart
 
-The Common Lisp programming language does not support passing multiple source files to the compiler. The user submission MUST have file name `solution.dart`. Problem-provided files MUST be accessible using `import`.
+The Common Lisp programming language does not support passing multiple source files to the compiler. The user submission MUST have file name `solution.dart`. Problem-provided files MUST be accessible using `import`. The specified entrypoint does not affect compilation in any way.

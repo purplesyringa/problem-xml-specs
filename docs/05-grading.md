@@ -8,9 +8,9 @@ On the other hand, some graders store and process secret information that the us
 
 Historically, there has been no separation between the two, but it is obviously unsafe to proceed in this way. While graders of the first class can be handled without any safety measures just like libraries, the second class has to be handled much more carefully.
 
-Let us call the graders of the second class **secure graders**. These graders, unlike graders of the first class, which we shall call **insecure graders**, MUST be listed in the problem specification as described in further sections of this document.
+Let us call the graders of the second class **secure graders**, and the graders of the first class **insecure graders**. Graders of both kinds are listed in the problem specification as described in [9. Files](09-files.md).
 
-While secure graders MAY be linked with the user's code if the submission is trusted, the judge SHOULD support isolation techniques as described below.
+While secure graders MAY be linked with the user's code directly if the submission is trusted, the judge SHOULD support isolation techniques as described below.
 
 
 ## 5.1. Protocol

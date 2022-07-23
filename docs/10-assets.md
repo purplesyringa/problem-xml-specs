@@ -15,6 +15,7 @@ The basic structure of the tag `<assets>` of `problem.xml` is:
         {...}
     </solutions>
     [{PROGRAMS}]
+    [{STRATEGY}]
 </assets>
 ```
 
@@ -27,8 +28,8 @@ The checker is listed as follows:
 
 ```xml
 <checker [name="{NAME}"] type="testlib">
-    <source path="{SOURCE-PATH}" type="{SOURCE-TYPE}" />
-    <binary path="{BINARY-PATH}" type="{BINARY-TYPE}" />
+    {SOURCES}
+    {BINARIES}
     [<copy path="{COPY-PATH}" />]
     <testset>
         <test-count>{CHECKER-TEST-COUNT}</test-count>
@@ -46,9 +47,9 @@ The checker is listed as follows:
 
 `{NAME}` is an optional checker identifier reserved to built-in checkers, e.g. `std::ncmp.cpp`. This field SHOULD NOT be used by the judge. Examples of built-in checkers are provided in [examples/std-checkers](examples/std-checkers), barring the `std::` prefix due to path name limitations.
 
-The checker MUST be listed in `<executables>` according to [9. Files](09-files.md). `{SOURCE-PATH}`, `{BINARY-PATH}`, `{SOURCE-TYPE}`, and `{BINARY-TYPE}` MUST match the values specified there.
+The checker MUST be listed in `<executables>` according to [9. Files](09-files.md). `{SOURCES}` and `{BINARIES}` MUST match the values specified there.
 
-The `<copy>` tag specifies that the source code from `{SOURCE-PATH}` is also copied to `{COPY-PATH}`. This is to support legacy systems that require the checker to be present in the root of the package with name `check.cpp`. Judges SHOULD NOT rely on existence of this field.
+If there is exactly one source file, the `<copy>` tag can be used to specify that it is also copied to `{COPY-PATH}`. This is to support legacy systems that require the checker to be present in the root of the package with name `check.cpp`. Judges SHOULD NOT rely on existence of this field.
 
 `<testset>` contains information on checker unit tests. Patterns are filesystem path patterns as described in [12. Path patterns](12-path-patterns.md). `{CHECKER-TEST-COUNT}` MUST be equal to the number of nodes in `<tests>`. A single test has the following format:
 
@@ -70,13 +71,13 @@ The interactor, if present, is listed as follows:
 
 ```xml
 <interactor>
-    <source path="{SOURCE-PATH}" type="{SOURCE-TYPE}" />
-    <binary path="{BINARY-PATH}" type="{BINARY-TYPE}" />
+    {SOURCES}
+    {BINARIES}
     [{RUNS}]
 </interactor>
 ```
 
-The interactor MUST be listed in `<executables>` according to [9. Files](09-files.md). `{SOURCE-PATH}`, `{BINARY-PATH}`, `{SOURCE-TYPE}`, and `{BINARY-TYPE}` MUST match the values specified there.
+The interactor MUST be listed in `<executables>` according to [9. Files](09-files.md). `{SOURCES}` and `{BINARIES}` MUST match the values specified there.
 
 The `{RUNS}` field is used only for run-twice problems. If it is present, it MUST look exactly like:
 
@@ -96,8 +97,8 @@ The validator, if present, is listed as:
 
 ```xml
 <validator>
-    <source path="{SOURCE-PATH}" type="{SOURCE-TYPE}" />
-    <binary path="{BINARY-PATH}" type="{BINARY-TYPE}" />
+    {SOURCES}
+    {BINARIES}
     <testset>
         <test-count>{VALIDATOR-TEST-COUNT}</test-count>
         <input-path-pattern>{VALIDATOR-TESTS-INPUT-PATTERN}</input-path-pattern>
@@ -110,7 +111,7 @@ The validator, if present, is listed as:
 </validator>
 ```
 
-The validator MUST be listed in `<executables>` according to [9. Files](09-files.md). `{SOURCE-PATH}`, `{BINARY-PATH}`, `{SOURCE-TYPE}`, and `{BINARY-TYPE}` MUST match the values specified there.
+The validator MUST be listed in `<executables>` according to [9. Files](09-files.md). `{SOURCES}` and `{BINARIES}` MUST match the values specified there.
 
 `<testset>` contains information on validator unit tests. Patterns are filesystem path patterns as described in [12. Path patterns](12-path-patterns.md). `{VALIDATOR-TEST-COUNT}` MUST be equal to the number of nodes in `<tests>`. A single test has the following format:
 
@@ -135,12 +136,12 @@ The `<solutions>` tag lists authors' solutions in the following format:
 
 ```xml
 <solution [note="{NOTE}"] tag="{TAG}">
-    <source path="{SOURCE-PATH}" type="{SOURCE-TYPE}" />
-    <binary path="{BINARY-PATH}" type="{BINARY-TYPE}" />
+    {SOURCES}
+    {BINARIES}
 </solution>
 ```
 
-The checker MUST NOT be listed in `<executables>`, because it is not necessary for judge operation.
+The checker MUST NOT be listed in `<executables>`, because it is not necessary for judge operation, but `{SOURCES}` and `{BINARIES}` have the same format.
 
 `{NOTE}` is an optional human-readable comment.
 
@@ -174,12 +175,12 @@ A single program is defined as:
 
 ```xml
 <program name="{NAME}">
-    <source path="{SOURCE-PATH}" type="{SOURCE-TYPE}" />
-    <binary path="{BINARY-PATH}" type="{BINARY-TYPE}" />
+    {SOURCES}
+    {BINARIES}
 </program>
 ```
 
-The program MUST be listed in `<executables>` according to [9. Files](09-files.md). `{SOURCE-PATH}`, `{BINARY-PATH}`, `{SOURCE-TYPE}`, and `{BINARY-TYPE}` MUST match the values specified there.
+The program MUST be listed in `<executables>` according to [9. Files](09-files.md). `{SOURCES}` and `{BINARIES}` MUST match the values specified there.
 
 The program will be accessible to the strategy by name `{NAME}`.
 
@@ -187,8 +188,8 @@ Technically, programs defined just inside `<assets>` could be moved into `<progr
 
 ```xml
 <program name="checker">
-    <source path="{SOURCE-PATH}" type="{SOURCE-TYPE}" />
-    <binary path="{BINARY-PATH}" type="{BINARY-TYPE}" />
+    {SOURCES}
+    {BINARIES}
 </program>
 ```
 
@@ -198,9 +199,22 @@ Similarly, an interactor can be defined as:
 
 ```xml
 <program name="interactor">
-    <source path="{SOURCE-PATH}" type="{SOURCE-TYPE}" />
-    <binary path="{BINARY-PATH}" type="{BINARY-TYPE}" />
+    {SOURCES}
+    {BINARIES}
 </program>
 ```
 
 ...and, if the problem is not run-twice, this will be identical to a dedicated `<interactor>` tag, except for legacy judges that can't parse `<programs>`. For this reason, preparation systems SHOULD abstain from using `<programs>` for checkers, interactors, and validators.
+
+
+## 10.6. Strategy
+
+Finally, problems that want to use a custom strategy as described in [2. Pipelines](02-pipelines.md), MUST use the following tag:
+
+```xml
+<strategy>
+    <source path="{STRATEGY-PATH}" type="python^3" />
+</strategy>
+```
+
+The file at `{STRATEGY-PATH}` MUST be a strategy script as described in [2. Pipelines](02-pipelines.md).

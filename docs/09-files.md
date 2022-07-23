@@ -26,12 +26,30 @@ Executable files are described in the following way:
 
 ```xml
 <executable>
-    <source path="{SOURCE-PATH}" type="{SOURCE-TYPE}" />
-    <binary path="{BINARY-PATH}" type="{BINARY-TYPE}" />
+    {SOURCE1}
+    {SOURCE2}
+    {...}
+    {BINARY1}
+    {BINARY2}
+    {...}
 </executable>
 ```
 
-All paths are package-relative. `{SOURCE-TYPE}` and `{BINARY-TYPE}` are described in [3. Types](03-types.md).
+Each source file is described as:
+
+```xml
+<source path="{SOURCE-PATH}" type="{SOURCE-TYPE}" />
+```
+
+...and each binary file is described as:
+
+```xml
+<binary path="{BINARY-PATH}" type="{BINARY-TYPE}" />
+```
+
+All paths are package-relative. `{SOURCE-TYPE}` and `{BINARY-TYPE}` are described in [3. Types](03-types.md). Typically, there is exactly one source file and one binary file, but this might not be the case if cross-language compilation is involved.
+
+The binaries listed here as well as in other sections are purely advisory: judges MAY build the executables themselves, and MUST do so if they don't understand a binary format or if source and binary formats don't match. The last option is to work around bugs in the *de facto* standard preparation systems, Polygon. One *bona fide* usecase of the feature is when a Python script with type `python^3` was compiled to bytecode for a specific Python version, e.g. `obj.cpython=3-8-10`, that is not supported by the judge.
 
 
 ## 9.2. Resources
@@ -45,7 +63,7 @@ The tag `<resources>` describes each resource file either in the following "shor
 or the following "long" format:
 
 ```xml
-<file [for-type="{FOR-TYPE}"] path="{PATH}" type="{TYPE}" [location="{LOCATION}"]>
+<file [for-type="{FOR-TYPE}"] path="{PATH}" type="{TYPE}" [location="{LOCATION}"] [secure-grader="true"]>
     <stages>
         <stage name="{STAGE1}" />
         <stage name="{STAGE2}" />
@@ -84,6 +102,8 @@ For `compile` stage, the behavior is just like when multiple arguments are passe
 The `{LOCATION}` field describes where the file should be put on the filesystem. The path is relative to the submission source code during `compile` stage, and the executable file during `run` stage. For example, if a file is stored in location `Eigen/Dense`, a C++ submission can access it using `#include "Eigen/Dense"`. If the `{LOCATION}` field is not present, it is assumed to be equal to the file name specified in `{PATH}`, that is, the file is put next to the program that is being built. This enables a backwards-compatible hierarchical filesystem structure.
 
 If the asset `solution` is listed, `{FOR-TYPE}` MUST be a source type mask as described in [3. Types](03-types.md). If `solution` is not listed, `{FOR-TYPE}` field MUST NOT be present.
+
+If the asset `solution` and the stage `compile` is listed, this file is interpreted as a grader or a library. If the `secure-grader` field is present, it is considered a secure grader; otherwise it is considered either an insecure grader or a library--there is no difference between the two. Read more on this at [5. Grading](05-grading.md).
 
 As this scheme is non-orthagonal, judges MUST allow the same path to be used in several `<file>` records. However, any two such records MUST NOT refer to the same location, stage, asset, and `{FOR-TYPE}` at once. For compatibility, preparation systems SHOULD abstain from generating duplicates if it is possible to realize the requested behavior without them.
 

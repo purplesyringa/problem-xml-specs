@@ -124,4 +124,4 @@ The short format is equivalent to
 
 Notice that the `{FOR-TYPE}` of the short format is always `*`, which means the judge MUST NOT take resource types into consideration. That is, even if the checker is written in C++, short-format resources with types other than `cpp` and `cpp-h` MUST be made available to the compiler too.
 
-Also note that the `compile` stage should be used for libraries and graders even for interpreted languages, and that secure graders are listed in one more place, as described in [10. Assets](10-assets.md).
+Also note that the `compile` stage, not the `run` stage, should be used for libraries and graders even for interpreted languages.

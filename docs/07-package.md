@@ -49,7 +49,6 @@ The tag `<assets>` describes the various problem-wide programs and scripts store
 The tag `<judging>` describes the tests, limitations, and various testing information. This is elaborated on in [11. Judging](11-judging.md).
 
 <!--
-    <judging {...}>{...}</judging>
     <properties>{...}</properties>
     <stresses>{...}</stresses>
 -->

@@ -1,6 +1,6 @@
 # 4. Compilation
 
-Classically, before a user submission is judged, it has to be compiled. This standard stretches the definition somewhat by allowing a strategy to decide what to compile and when. However, the steps of transforming source code to a runnable program remain, even for interpreted languages, in which case it might consist only of sandbox creation.
+Classically, before a user submission is judged, it has to be compiled. This standard stretches the definition somewhat by allowing a strategy to decide what to compile and when. However, the steps of transforming source code to a runnable program remain, even for some interpreted languages, in which case it might consist only of sandbox creation.
 
 How programs are compiled and executed has historically been black-boxed, and it mostly remains so in the proposed format. However, we have to shed a little light on the internals when graders and libraries are involved.
 
@@ -146,8 +146,6 @@ Other languages use paths, and this means that the problem-provided files have t
 Except that some languages require the file name to match the module name, which complicates matters even more.
 
 Besides, many languages have a notion of a "main" file, e.g. Python and Rust. This means that the problemsetter has to specify the **entrypoint file** explicitly. In simple problems that don't provide graders or libraries, there is only one module--the user's submission--and so the entrypoint is obvious. When the problem provides source files, though, the choice is less clear.
-
-To put the cherry on top of the cake, it is sometimes necessary to compile two files written in different languages together, as elaborated upon in [5. Grading](05-grading.md).
 
 This section explains how officially supported languages are to be handled, and how cross-file communication is performed.
 

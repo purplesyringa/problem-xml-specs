@@ -17,13 +17,15 @@ Source types contain information about what language and compiler the files are 
 
 Formally, the full form of a source type looks like `{LANGUAGE}={LANGUAGE-VERSION}.{IMPLEMENTATION}={IMPLEMENTATION-VERSION}.{ARCH}.{PLATFORM}`. As the dot sign is already used, the dots in version fields MUST be replaced with dashes. For languages with multiple file kinds (e.g. C headers), `-{KIND}` is appended to the language field.
 
-Executable types have a similar format, though they usually don't contain a version. The full form of an executable type is `{KIND}.{FORMAT}.{ARCH}.{PLATFORM}`, where `{KIND}` is one of the following:
+Executable types have a similar format, though they usually don't contain a version. The full form of an executable type is `{KIND}.{FORMAT}={FORMAT-VERSION}.{ARCH}.{PLATFORM}`, where `{KIND}` is one of the following:
 
 - `exe` for stand-alone executables, e.g. normal applications,
 - `dylib` for dynamically linked libraries,
 - `obj` for object files, e.g. statically linked libraries or archives.
 
-Finally, raw types that don't depend on the architecture use the syntax `raw.{FORMAT}`.
+The `.{ARCH}.{PLATFORM}` or `.{PLATFORM}` suffix can be omitted for some formats, just like `={FORMAT-VERSION}`.
+
+Raw, non-executable types that don't depend on the architecture (e.g. ZIP archives) use the syntax `raw.{FORMAT}`.
 
 
 ## 3.1. Masks
@@ -117,7 +119,7 @@ Additionally, the following type SHOULD be recognized:
 
 ### 3.3.4. Common Lisp
 
-The language identifier `cl` is appointed to the Common Lisp programming language. The only version of the standard is `default`, referring to ANSI INCITS 226-1994.
+The language identifier `cl` is appointed to the Common Lisp programming language. The only version is `default`, referring to ANSI INCITS 226-1994.
 
 The implementation identifier `clisp` is assigned to CLISP, `ccl` is assigned to Clozure CL, and `gcl` is assigned to GNU Common Lisp. The default implementation is `clisp`.
 
@@ -256,7 +258,7 @@ The implementation identifier `opt` is assigned to `ocamlopt`, and `bytecode` is
 
 ### 3.3.18. Pascal
 
-The language identifier `pas` is appointed to the Pascal programming language. The only version of the standard is `default`, referring to ISO 7185.
+The language identifier `pas` is appointed to the Pascal programming language. The only version is `default`, referring to ISO 7185.
 
 The implementation identifier `fpc` is assigned to Free Pascal, `dpr` is assigned to Delphi, `abc` is assigned to PascalABC.NET, and `borland` is assigned to Turbo (Borland) Pascal. The default implementation is `fpc`.
 
@@ -305,14 +307,14 @@ Additionally, the following types SHOULD be recognized:
 
 The language identifier `raku` is appointed to the Raku programming language, formerly known as Perl 6. The versions match the official releases.
 
-The one and only implementation identifier is `raku`, with version matching that of the language. Ergo this is the default implementation.
+The implementation identifier `rakudo` is assigned to Rakudo, the official Raku compiler, and `nqp` is assigned to NQP. The default implementation is `rakudo`.
 
 
 ### 3.3.23. Ruby
 
 The language identifier `ruby` is appointed to the Ruby programming language. The versions match the official releases.
 
-The one and only implementation identifier is `ruby`, with version matching that of the language. Ergo this is the default implementation.
+The one and only implementation identifier is `yarv`, assigned to Yet another Ruby VM, with version matching that of the language. Ergo this is the default implementation.
 
 
 ### 3.3.24. Rust
@@ -347,35 +349,93 @@ The implementation identifier `hotspot` is assigned to HotSpot, the official Jav
 
 This standard also assigns types to common binary types. If a format from the list below is supported by the judge, it MUST support the appointed type as it is written in this standard. For formats not listed here, the followers of this specification are advised to use their good judgement and create a pull-request updating this specification to include the new type.
 
+Executable files can be reasonably split into two big groups: native executables which the operating system can execute directly, and interpreted executables which need a runtime to work. While the former list only contains a few entries, the latter often includes an entry per language implementation, which somewhat complicates manners. Both groups are described here.
+
 
 ### 3.4.1. Archive
 
-The format identifier `ar` is appointed to the System V/GNU Archive format, produced by the `ar` utility and having extension .a. It only supports `obj` format.
+The format identifier `ar` is appointed to the System V/GNU Archive format, produced by the `ar` utility and having extension .a. It only supports `obj` kind. The only version is `default`.
 
 The supported platforms are `linux`, `systemv`, and `hurd`.
 
 
 ### 3.4.2. ELF
 
-The format identifier `elf` is appointed to the Executable and Linkable Format. It supports all three kinds: `exe` for executables, `dylib` for .so files, and `obj` for .o files.
+The format identifier `elf` is appointed to the Executable and Linkable Format. It supports all three kinds: `exe` for executables, `dylib` for .so files, and `obj` for .o files. The only version is `default`.
 
 The supported platforms are `linux`, `netbsd`, `freebsd`, `openbsd`, `systemv`, and `hurd`.
 
 
 ### 3.4.3. Mach-O
 
-The format identifier `macho` is appointed to the Mach-O format. It supports all three kinds: `exe` for executables, `dylib` for bundles and .dylib files, and `obj` for .o files.
+The format identifier `macho` is appointed to the Mach-O format. It supports all three kinds: `exe` for executables, `dylib` for bundles and .dylib files, and `obj` for .o files. The only version is `default`.
 
 The only supported platform is `macos`.
 
 
 ### 3.4.4. PE
 
-The format identifier `pe` is appointed to the Portable Executable format. It supports all three kinds: `exe` for executables, `dylib` for .dll files, and `obj` for .obj files.
+The format identifier `pe` is appointed to the Portable Executable format. It supports all three kinds: `exe` for executables, `dylib` for .dll files, and `obj` for .obj files. The only version is `default`.
 
 The only supported platform is `nt`.
 
 This specification includes both PE32 and PE32+ into the PE format.
+
+
+### 3.4.5. CLISP FAS
+
+The format identifier `fas` is appointed to the compiled files generated by CLISP. It only supports `obj` kind. The versions match CLISP versions.
+
+Both the architecture and the platform fields are omitted.
+
+
+### 3.4.6. BEAM
+
+The format identifier `beam` is appointed to the BEAM VM files, used by Elixir and Erlang. It only supports `obj` kind. The versions match Erlang versions.
+
+Both the architecture and the platform fields are omitted.
+
+
+### 3.4.6. JVM
+
+The format identifier `jvm` is appointed to the files used by the JVM machine and produced by Java, Scala, and Kotlin compilers. It supports the `obj` kind for class files and the `exe` kind for JAR files. The versions match official version of the class format.
+
+Both the architecture and the platform fields are omitted.
+
+
+### 3.4.7. Luac
+
+The format identifier `luac` is appointed to the compiled files generated by Lua compiler. It only supports `obj` kind. The versions match Lua versions.
+
+Both the architecture and the platform fields are omitted.
+
+
+### 3.4.8. CPython
+
+The format identifier `cpython` is appointed to the compiled files generated by CPython. It only supports `obj` kind. The versions match CPython versions.
+
+Both the architecture and the platform fields are omitted.
+
+
+### 3.4.9. PyPy
+
+The format identifier `pypy` is appointed to the compiled files generated by PyPy. It only supports `obj` kind. The versions match PyPy versions.
+
+Both the architecture and the platform fields are omitted.
+
+
+### 3.4.10. MoarVM
+
+The format identifier `moarvm` is appointed to MoarVM. It only supports `obj` kind. The versions match official versions.
+
+Both the architecture and the platform fields are omitted.
+
+
+### 3.4.11. YARV
+
+The format identifier `yarv` is appointed to the bytecode created by [RubyVM](https://ruby-doc.org/core-2.5.1/RubyVM/InstructionSequence.html). It only supports `obj` kind. The versions match Ruby versions.
+
+Both the architecture and the platform fields are omitted.
 
 
 ## 3.5. Supported raw types

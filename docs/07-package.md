@@ -44,7 +44,9 @@ The tags `<names>`, `<statements>`, `<tutorials>`, and `<tags>` are necessary fo
 
 The tag `<files>` describes the files stored in the package. This is elaborated on in [9. Files](09-files.md).
 
-The tag `<assets>` describes the various problem-wide programs and scripts stored in the package. This is elaborated on in [10. Assets](09-assets.md).
+The tag `<assets>` describes the various problem-wide programs and scripts stored in the package. This is elaborated on in [10. Assets](10-assets.md).
+
+The tag `<judging>` describes the tests, limitations, and various testing information. This is elaborated on in [11. Judging](11-judging.md).
 
 <!--
     <judging {...}>{...}</judging>

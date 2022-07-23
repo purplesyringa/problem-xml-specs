@@ -27,3 +27,6 @@ After understanding all of the above, the reader is advised to proceed towards t
 - [8. Localization](08-localization.md)
 - [9. Files](09-files.md)
 - [10. Assets](10-assets.md)
+- [11. Judging](11-judging.md)
+- [12. Path patterns](12-path-patterns.md)
+- [13. Defaults](13-defaults.md)

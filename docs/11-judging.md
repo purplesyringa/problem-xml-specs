@@ -40,7 +40,7 @@ The tag has the following format:
 
 `{CPU-SPEED}` is the maximum frequency of the procesor in MHz.
 
-The fields `{INPUT-FILE}`, `{OUTPUT-FILE}`, `{RUN-COUNT}`, and `{TREAT-POINTS-FROM-CHECKER-AS-PERCENT}` are used to generate the default strategy and are described later.
+The fields `{INPUT-FILE}`, `{OUTPUT-FILE}`, `{RUN-COUNT}`, and `{TREAT-POINTS-FROM-CHECKER-AS-PERCENT}` are used to generate the default strategy and are described later in [13. Defaults](13-defaults.md).
 
 
 ## 11.2. Testsets

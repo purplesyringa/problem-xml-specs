@@ -104,30 +104,30 @@ A group contains of one or more tests and has two properties, called **policies*
 
 **Points policy** specifies how points are awarded. It can be of two values:
 
-- `COMPLETE_GROUP` means that if at least one test fails, no points are awarded for the test group whatsoever,
-- `EACH_TEST` means that all tests are judged independently, as if the tests were not attached to any group.
+- `complete-group` means that if at least one test fails, no points are awarded for the test group whatsoever,
+- `each-test` means that all tests are judged independently, as if the tests were not attached to any group.
 
-The `COMPLETE_GROUP` policy means that if any test of the group failed, all other tests can be safely ignored. The judge SHOULD use this for optimization and emit IG verdicts for skipped tests.
+The `complete-group` policy means that if any test of the group failed, all other tests can be safely ignored. The judge SHOULD use this for optimization and emit IG verdicts for skipped tests.
 
-`COMPLETE_GROUP` MUST NOT be used if PT test verdicts are emitted, because it is not obvious what the correct behavior should be in this case. Possible interpretations include taking the minimum of the points and multiplying it by the test count, or requiring that all tests are one hundred percent successful, or requiring that the sum of points or the number of passed tests is above the given limit. If either of this is intended, a custom valuer or strategy should be used.
+`complete-group` MUST NOT be used if PT test verdicts are emitted, because it is not obvious what the correct behavior should be in this case. Possible interpretations include taking the minimum of the points and multiplying it by the test count, or requiring that all tests are one hundred percent successful, or requiring that the sum of points or the number of passed tests is above the given limit. If either of this is intended, a custom valuer or strategy should be used.
 
 The other property is **feedback policy**, which shows how much information about the tests the user has access to. It can be of four values:
 
-- `NONE` means that no information is revealed about the group and its tests whatsoever,
-- `POINTS` means that only the total points awarded for the group are shown,
-- `ICPC` means that the verdict and public metrics for the first failed test of the group are shown, as well as the number of that test, and if all tests pass, the maximum across public metrics is shown (e.g. if one test uses 1s and 200MB, and another test uses 2s and 100MB, 2s and 200MB are shown),
-- `COMPLETE` means that the verdict and public metrics for all tests of the group are shown.
+- `none` means that no information is revealed about the group and its tests whatsoever,
+- `points` means that only the total points awarded for the group are shown,
+- `icpc` means that the verdict and public metrics for the first failed test of the group are shown, as well as the number of that test, and if all tests pass, the maximum across public metrics is shown (e.g. if one test uses 1s and 200MB, and another test uses 2s and 100MB, 2s and 200MB are shown),
+- `complete` means that the verdict and public metrics for all tests of the group are shown.
 
-If points are disabled, the tests that are not attached to any group are assumed to be in a separate group with `COMPLETE_GROUP` points policy and `ICPC` feedback policy. If points are enabled, they are assumed to be in a separate group with `EACH_TEST` points policy and `POINTS` feedback policy.
+If points are disabled, the tests that are not attached to any group are assumed to be in a separate group with `complete-group` points policy and `icpc` feedback policy. If points are enabled, they are assumed to be in a separate group with `each-test` points policy and `points` feedback policy.
 
-If the feedback policy is `NONE` and the points policy is `COMPLETE_GROUP`, the judge MAY judge the tests of the group out of order, preferring tests that are more likely to fail first.
+If the feedback policy is `none` and the points policy is `complete-group`, the judge MAY judge the tests of the group out of order, preferring tests that are more likely to fail first.
 
 Additionally, a group may have **dependencies**, which are other groups that must all be passed for the present group to be judged. Dependencies form a directed acyclic graph. A test from a group a dependency of which did not pass MUST have IG verdict. A group is considered passed if all its tests have verdict OK.
 
 
 ## 6.6. Testlib output
 
-Checkers and other program scripts usually use the [testlib](https://codeforces.com/testlib) library.
+Checkers and interactors usually use the [testlib](https://codeforces.com/testlib) library.
 
 Testlib checkers are invoked as follows:
 

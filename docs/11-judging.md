@@ -67,6 +67,8 @@ A testset is a group of tests, independent from other testsets, with its own lim
 
 `{TIME-LIMIT}` is the CPU time limit in milliseconds. `{MEMORY-LIMIT}` is the memory limit in bytes. Patterns are filesystem path patterns as described in [13. Path patterns](13-path-patterns.md). `{TEST-COUNT}` MUST be equal to the number of nodes in `<tests>`.
 
+Only the names `pretests` and `tests` are allowed. When users write contests, virtual or real, the `pretests` testset should be used for testing, and all submissions are to be retested on the `tests` testset after the contest ends, although judges MAY perform system testing in background without showing the results to the user. The tests of `pretests` MUST be a prefix of tests from `tests`.
+
 
 ## 11.3. Tests
 

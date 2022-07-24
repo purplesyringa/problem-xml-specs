@@ -144,12 +144,70 @@ checker(run2_input, interactor_output, test.answer)
 ```
 
 
-## 14.5. Scoring
+## 14.5. Points
 
-Finally, if the field `{TREAT-POINTS-FROM-CHECKER-AS-PERCENT}` from [11. Judging](11-judging.md) is set, the following chunk is appended:
+If the field `{TREAT-POINTS-FROM-CHECKER-AS-PERCENT}` from [11. Judging](11-judging.md) is set, the following chunk is appended:
 
 ```python
 for test in tests:
     if isinstance(test.verdict, PT):
         test.verdict.points = test.points * (test.verdict.points / 100)
+```
+
+
+## 14.6. Scoring
+
+Finally, if a scorer is listed in [10. Assets](10-assets.md), another chunk is appended, based on the scorer type.
+
+
+### 14.6.1. `codeforces`
+
+```python
+tests_passed = sum(test.verdict == OK for test in tests, 0)
+
+scorer_in, scorer_out = File(), File()
+scorer_in.write(f"{tests_passed}\n".encode())
+await scorer(stdin=scorer_in, stdout=scorer_out)
+points = int(scorer_out.read().decode())
+
+submission.rate(PT(points))
+```
+
+
+### 14.6.2. `ejudge`
+
+```python
+scorer_in, scorer_out = File(), File()
+
+scorer_in.write(f"{len(tests)}\n".encode())
+
+for test in tests:
+    r = {
+        OK: 0,
+        RE: 2,
+        TL: 3,
+        PE: 4,
+        WA: 5,
+        CF: 6,
+        ML: 12,
+        SV: 13,
+        IL: 15,
+        IG: 18
+    }[test.verdict]
+
+    if test.verdict == OK:
+        s = test.points
+    elif isinstance(test.verdict, PT):
+        s = test.verdict.points
+    else:
+        s = 0
+
+    t = int(test.metrics.time * 1000)
+
+    scorer_out.write(f"{r} {s} {t}\n".encode())
+
+await scorer(stdin=scorer_in, stdout=scorer_out)
+points = int(scorer_out.read().decode())
+
+submission.rate(PT(points))
 ```

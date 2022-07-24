@@ -7,6 +7,7 @@ The basic structure of the tag `<assets>` of `problem.xml` is:
 ```xml
 <assets>
     {CHECKER}
+    [{SCORER}]
     [{INTERACTOR}]
     [<validators>{VALIDATOR}</validators>]
     <solutions>
@@ -65,7 +66,28 @@ The `{i}`-th node specifies the expected output of the checker on the `{i}`-th t
 - `crashed` for CF.
 
 
-## 10.2. Interactor
+## 10.2. Scorer
+
+The scorer, also known as valuer, is used to compile test verdicts to a single submission verdict. If present, it is listed as follows:
+
+```xml
+<scorer [type="{SCORER-TYPE}"]>
+    {SOURCES}
+    {BINARIES}
+</scorer>
+```
+
+The scorer MUST be listed in `<executables>` according to [9. Files](09-files.md). `{SOURCES}` and `{BINARIES}` MUST match the values specified there.
+
+`{SCORER-TYPE}` is one of the following values:
+
+- `codeforces` (default),
+- `ejudge`.
+
+We will get to what it means later, in [14. Defaults](14-defaults.md).
+
+
+## 10.3. Interactor
 
 The interactor, if present, is listed as follows:
 
@@ -91,7 +113,7 @@ The `{RUNS}` field is used only for run-twice problems. If it is present, it MUS
 We will get to what it means later, in [14. Defaults](14-defaults.md).
 
 
-## 10.3. Validator
+## 10.4. Validator
 
 The validator, if present, is listed as:
 
@@ -130,7 +152,7 @@ validator <{INPUT-FILE}
 ...and return verdicts via a testlib-style exit code, either OK or PE.
 
 
-## 10.4. Model solutions
+## 10.5. Model solutions
 
 The `<solutions>` tag lists authors' solutions in the following format:
 
@@ -159,7 +181,7 @@ The checker MUST NOT be listed in `<executables>`, because it is not necessary f
 - `failed`: the solution fails with CF verdict.
 
 
-## 10.5. Other programs
+## 10.6. Other programs
 
 Other programs are defined in the `<programs>` tag as follows:
 
@@ -207,7 +229,7 @@ Similarly, an interactor can be defined as:
 ...and, if the problem is not run-twice, this will be identical to a dedicated `<interactor>` tag, except for legacy judges that can't parse `<programs>`. For this reason, preparation systems SHOULD abstain from using `<programs>` for checkers, interactors, and validators.
 
 
-## 10.6. Strategy
+## 10.7. Strategy
 
 Finally, problems that want to use a custom strategy as described in [2. Pipelines](02-pipelines.md), MUST use the following tag:
 

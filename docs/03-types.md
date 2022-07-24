@@ -13,7 +13,7 @@ Source types contain information about what language and compiler the files are 
 - `python=3.cpython`, `c=90.gcc`,
 - `python=3-7.cpython`, `c=90.gcc=9-4-0`,
 - `c=90.gcc=9-4-0.amd64`,
-- `c=90.gcc=9-4-0.amd64.posix`.
+- `c=90.gcc=9-4-0.amd64.linux`.
 
 Formally, the full form of a source type looks like `{LANGUAGE}={LANGUAGE-VERSION}.{IMPLEMENTATION}={IMPLEMENTATION-VERSION}.{ARCH}.{PLATFORM}`. As the dot sign is already used, the dots in version fields MUST be replaced with dashes. For languages with multiple file kinds (e.g. C headers), `-{KIND}` is appended to the language field.
 

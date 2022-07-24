@@ -13,7 +13,9 @@ This document assumes the reader is familiar with programming contest competitio
 
 The two main topics of this document is how submissions are tested and how the problems are represented on disk. Unfortunately, the two are historically highly interconnected, which worsens the learning curve. This standard attempts to separate the two by introducing an intermediate format used for the former and generated from the latter.
 
-The reader is advised to start with the first half of this standard, which describes how submissions would be judged if a perfect format existed, and the exact behavior of judges based on this format:
+This standard starts with two unrelated parts.
+
+The first half of this standard describes an intermediary format--**strategies**--and how submissions would be judged based on this format:
 
 - [2. Pipelines](02-pipelines.md)
 - [3. Types](03-types.md)
@@ -21,7 +23,7 @@ The reader is advised to start with the first half of this standard, which descr
 - [5. Grading](05-grading.md)
 - [6. Valuation](06-valuation.md)
 
-After understanding all of the above, the reader is advised to proceed towards the specification of the proposed format itself:
+The second half is the specification of the proposed format itself:
 
 - [7. Package](07-package.md)
 - [8. Localization](08-localization.md)
@@ -30,4 +32,9 @@ After understanding all of the above, the reader is advised to proceed towards t
 - [11. Judging](11-judging.md)
 - [12. Properties](12-properties.md)
 - [13. Path patterns](13-path-patterns.md)
+
+Finally, the last section is a link between the package format and strategies and describes how the former is translated to the latter:
+
 - [14. Defaults](14-defaults.md)
+
+The reader is advised to start with reading about the strategies and then proceed to the format description, but this is not strictly necessary.

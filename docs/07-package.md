@@ -11,7 +11,9 @@ A **package** is a directory (often compressed into a zip file) containing all i
 - Model solutions,
 - A configuration file defining how to use and where to find the above.
 
-The heart of the package is the `problem.xml` file, which is stored in the root of the package. All other files, barring some exceptions, are stored in the appropriate subdirectories.
+The heart of the package is the `problem.xml` file, which is stored in the root of the package. If this file is missing, `problem.xml.polygon` is a fallback name.
+
+All other files, barring some exceptions, are stored in the appropriate subdirectories.
 
 
 ## 7.1. problem.xml structure

@@ -28,7 +28,6 @@ The heart of the package is the `problem.xml` file, which is stored in the root 
     <files>{...}</files>
     <assets>{...}</assets>
     <properties>{...}</properties>
-    <stresses>{...}</stresses>
     <tags>{...}</tags>
     {...}
 </problem>
@@ -48,9 +47,6 @@ The tag `<assets>` describes the various problem-wide programs and scripts store
 
 The tag `<judging>` describes the tests, limitations, and various testing information. This is elaborated on in [11. Judging](11-judging.md).
 
-<!--
-    <properties>{...}</properties>
-    <stresses>{...}</stresses>
--->
+The tag `<properties>` describes various metadata and miscellaneous options. This is elaborated on in [12. Properties](12-properties.md).
 
 Implementations MAY add their own tags to the `<problem>` tag if necessary. Key-value information that is not directly related to judging SHOULD be added to `<properties>`.

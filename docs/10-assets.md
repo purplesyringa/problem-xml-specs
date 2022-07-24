@@ -51,7 +51,7 @@ The checker MUST be listed in `<executables>` according to [9. Files](09-files.m
 
 If there is exactly one source file, the `<copy>` tag can be used to specify that it is also copied to `{COPY-PATH}`. This is to support legacy systems that require the checker to be present in the root of the package with name `check.cpp`. Judges SHOULD NOT rely on existence of this field.
 
-`<testset>` contains information on checker unit tests. Patterns are filesystem path patterns as described in [12. Path patterns](12-path-patterns.md). `{CHECKER-TEST-COUNT}` MUST be equal to the number of nodes in `<tests>`. A single test has the following format:
+`<testset>` contains information on checker unit tests. Patterns are filesystem path patterns as described in [13. Path patterns](13-path-patterns.md). `{CHECKER-TEST-COUNT}` MUST be equal to the number of nodes in `<tests>`. A single test has the following format:
 
 ```xml
 <test verdict="{VERDICT}" />
@@ -88,7 +88,7 @@ The `{RUNS}` field is used only for run-twice problems. If it is present, it MUS
 </runs>
 ```
 
-We will get to what it means later, in [13. Defaults](13-defaults.md).
+We will get to what it means later, in [14. Defaults](14-defaults.md).
 
 
 ## 10.3. Validator
@@ -113,7 +113,7 @@ The validator, if present, is listed as:
 
 The validator MUST be listed in `<executables>` according to [9. Files](09-files.md). `{SOURCES}` and `{BINARIES}` MUST match the values specified there.
 
-`<testset>` contains information on validator unit tests. Patterns are filesystem path patterns as described in [12. Path patterns](12-path-patterns.md). `{VALIDATOR-TEST-COUNT}` MUST be equal to the number of nodes in `<tests>`. A single test has the following format:
+`<testset>` contains information on validator unit tests. Patterns are filesystem path patterns as described in [13. Path patterns](13-path-patterns.md). `{VALIDATOR-TEST-COUNT}` MUST be equal to the number of nodes in `<tests>`. A single test has the following format:
 
 ```xml
 <test verdict="{VERDICT}" />

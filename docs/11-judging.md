@@ -40,7 +40,7 @@ The tag has the following format:
 
 `{CPU-SPEED}` is the maximum frequency of the procesor in MHz.
 
-The fields `{INPUT-FILE}`, `{OUTPUT-FILE}`, `{RUN-COUNT}`, and `{TREAT-POINTS-FROM-CHECKER-AS-PERCENT}` are used to generate the default strategy and are described later in [13. Defaults](13-defaults.md).
+The fields `{INPUT-FILE}`, `{OUTPUT-FILE}`, `{RUN-COUNT}`, and `{TREAT-POINTS-FROM-CHECKER-AS-PERCENT}` are used to generate the default strategy and are described later in [14. Defaults](14-defaults.md).
 
 
 ## 11.2. Testsets
@@ -65,7 +65,7 @@ A testset is a group of tests, independent from other testsets, with its own lim
 </testset>
 ```
 
-`{TIME-LIMIT}` is the CPU time limit in milliseconds. `{MEMORY-LIMIT}` is the memory limit in bytes. Patterns are filesystem path patterns as described in [12. Path patterns](12-path-patterns.md). `{TEST-COUNT}` MUST be equal to the number of nodes in `<tests>`.
+`{TIME-LIMIT}` is the CPU time limit in milliseconds. `{MEMORY-LIMIT}` is the memory limit in bytes. Patterns are filesystem path patterns as described in [13. Path patterns](13-path-patterns.md). `{TEST-COUNT}` MUST be equal to the number of nodes in `<tests>`.
 
 
 ## 11.3. Tests

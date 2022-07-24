@@ -1,4 +1,4 @@
-# 12. Path patterns
+# 13. Path patterns
 
 Path patterns were mentioned in [10. Assets](10-assets.md) and [11. Judging](11-judging.md) when describing how tests are referenced.
 

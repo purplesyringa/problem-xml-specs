@@ -1,4 +1,4 @@
-# 9. Files
+# 10. Files
 
 The tag `<files>` of `problem.xml` is of the following structure:
 
@@ -18,7 +18,7 @@ The tag `<files>` of `problem.xml` is of the following structure:
 ```
 
 
-## 9.1. Executables
+## 10.1. Executables
 
 This section lists all executable files that are compiled from source, such as checkers and validators, without differentiating between them in any way. This section does not store any information that cannot be acquired from other locations of the `problem.xml` file and serves only as a compatibility mechanism.
 
@@ -52,7 +52,7 @@ All paths are package-relative. `{SOURCE-TYPE}` and `{BINARY-TYPE}` are describe
 The binaries listed here as well as in other sections are purely advisory: judges MAY build the executables themselves, and MUST do so if they don't understand a binary format or if source and binary formats don't match. The last option is to work around bugs in the *de facto* standard preparation systems, Polygon. One *bona fide* usecase of the feature is when a Python script with type `python^3` was compiled to bytecode for a specific Python version, e.g. `obj.cpython=3-8-10`, that is not supported by the judge.
 
 
-## 9.2. Resources
+## 10.2. Resources
 
 The tag `<resources>` describes each resource file either in the following "short" format:
 

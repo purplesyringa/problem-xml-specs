@@ -8,7 +8,7 @@ On the other hand, some graders store and process secret information that the us
 
 Historically, there has been no separation between the two, but it is obviously unsafe to proceed in this way. While graders of the first class can be handled without any safety measures just like libraries, the second class has to be handled much more carefully.
 
-Let us call the graders of the second class **secure graders**, and the graders of the first class **insecure graders**. Graders of both kinds are listed in the problem specification as described in [9. Files](09-files.md). The `compile` strategy function determines the kind of grader from that specification automatically.
+Let us call the graders of the second class **secure graders**, and the graders of the first class **insecure graders**. Graders of both kinds are listed in the problem specification as described in [10. Files](10-files.md). The `compile` strategy function determines the kind of grader from that specification automatically.
 
 While secure graders MAY be linked with the user's code directly if the submission is trusted, the judge SHOULD support isolation techniques as described below.
 

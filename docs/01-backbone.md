@@ -22,19 +22,20 @@ The first half of this standard describes an intermediary format--**strategies**
 - [4. Compilation](04-compilation.md)
 - [5. Grading](05-grading.md)
 - [6. Valuation](06-valuation.md)
+- [7. Arbitration](07-arbitration.md)
 
 The second half is the specification of the proposed format itself:
 
-- [7. Package](07-package.md)
-- [8. Localization](08-localization.md)
-- [9. Files](09-files.md)
-- [10. Assets](10-assets.md)
-- [11. Judging](11-judging.md)
-- [12. Properties](12-properties.md)
-- [13. Path patterns](13-path-patterns.md)
+- [8. Package](08-package.md)
+- [9. Localization](09-localization.md)
+- [10. Files](10-files.md)
+- [11. Assets](11-assets.md)
+- [12. Judging](12-judging.md)
+- [13. Properties](13-properties.md)
+- [14. Path patterns](14-path-patterns.md)
 
 Finally, the last section is a link between the package format and strategies and describes how the former is translated to the latter:
 
-- [14. Defaults](14-defaults.md)
+- [15. Defaults](15-defaults.md)
 
 The reader is advised to start with reading about the strategies and then proceed to the format description, but this is not strictly necessary.

@@ -1,4 +1,4 @@
-# 12. Properties
+# 13. Properties
 
 Properties are various key-value options that control either judge or preparation system behavior.
 

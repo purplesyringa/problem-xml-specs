@@ -1,20 +1,20 @@
-# 14. Defaults
+# 15. Defaults
 
-If a problem does not provide a strategy as specified in [10. Assets](10-assets.md), one is generated automatically. This section describes how this is done.
+If a problem does not provide a strategy as specified in [11. Assets](11-assets.md), one is generated automatically. This section describes how this is done.
 
 
-## 14.1. Options
+## 15.1. Options
 
 At the very start of the strategy, options are configured.
 
-If a scorer is listed in [10. Assets](10-assets.md), the strategy starts with:
+If a scorer is listed in [11. Assets](11-assets.md), the strategy starts with:
 
 ```python
 submission.disable_autorate()
 ```
 
 
-## 14.2. Problem types
+## 15.2. Problem types
 
 The problem type is determined. This type can be either of the following:
 
@@ -24,16 +24,16 @@ The problem type is determined. This type can be either of the following:
 - `run-twice-interactive`
 - `run-twice-double-interactive`.
 
-Firstly, the `<judging>` tag, which is described in detail in [11. Judging](11-judging.md), is consulted.
+Firstly, the `<judging>` tag, which is described in detail in [12. Judging](12-judging.md), is consulted.
 
-If it contains the field `run-count="2"`, the algorithm is as follows: if an interactor is not listed in `<assets>` (see [10. Assets](10-assets.md)), the type is `run-twice`. If it is listed, but the description does not contain a `<runs>` tag, it is considered `run-twice-interactive`. If the `<runs>` tag is present, it is considered `run-twice-double-interactive`.
+If it contains the field `run-count="2"`, the algorithm is as follows: if an interactor is not listed in `<assets>` (see [11. Assets](11-assets.md)), the type is `run-twice`. If it is listed, but the description does not contain a `<runs>` tag, it is considered `run-twice-interactive`. If the `<runs>` tag is present, it is considered `run-twice-double-interactive`.
 
-If `<judging>` does not have the `run-count` field, the algorithm is as follows: if the tag `run-twice` is not present in `<tags>` (see [8. Localization](08-localization.md)), the type is `io`. Otherwise, the type is based on whether the program has an interactor: if it does, the type is `run-twice-double-interactive`, otherwise it is `run-twice`.
+If `<judging>` does not have the `run-count` field, the algorithm is as follows: if the tag `run-twice` is not present in `<tags>` (see [9. Localization](09-localization.md)), the type is `io`. Otherwise, the type is based on whether the program has an interactor: if it does, the type is `run-twice-double-interactive`, otherwise it is `run-twice`.
 
 
-## 14.3. Compilation
+## 15.3. Compilation
 
-At the start of the strategy, the user submission is compiled. Resources listed in [9. Files](09-files.md) that have matching `for-type` fields and have `compile` stage and `solution` asset enabled are compiled with the submission:
+At the start of the strategy, the user submission is compiled. Resources listed in [10. Files](10-files.md) that have matching `for-type` fields and have `compile` stage and `solution` asset enabled are compiled with the submission:
 
 ```python
 # Pseudocode
@@ -49,13 +49,13 @@ user = await compile(submission, *libraries)
 `compile` automatically determines which source files are parts of secure graders and links them safely, as described in [5. Grading](05-grading.md).
 
 
-## 14.4. Limits and streams
+## 15.4. Limits and streams
 
-Let us denote the fields `{TIME-LIMIT}`, `{MEMORY-LIMIT}`, `{INPUT-FILE}`, and `{OUTPUT-FILE}` from [11. Judging](11-judging.md) by `time_limit`, `memory_limit`, `input_file`, and `ouptut_file`, respectively.
+Let us denote the fields `{TIME-LIMIT}`, `{MEMORY-LIMIT}`, `{INPUT-FILE}`, and `{OUTPUT-FILE}` from [12. Judging](12-judging.md) by `time_limit`, `memory_limit`, `input_file`, and `ouptut_file`, respectively.
 
 For simplicity, we describe the function `invoke`, the call to which is almost equivalent to calling `user` directly.
 
-Also, occasionally, the user is allowed to use files like `input.txt` and `output.txt` instead of standard streams. This is the place where such behavior is enabled. Let us denote the fields `{INPUT-FILE}` and `{OUTPUT-FILE}` from [11. Judging](11-judging.md) by `input_file` and `output_file` in the code below.
+Also, occasionally, the user is allowed to use files like `input.txt` and `output.txt` instead of standard streams. This is the place where such behavior is enabled. Let us denote the fields `{INPUT-FILE}` and `{OUTPUT-FILE}` from [12. Judging](12-judging.md) by `input_file` and `output_file` in the code below.
 
 ```python
 def invoke(stdin, stdout):
@@ -77,7 +77,7 @@ def invoke(stdin, stdout):
 ```
 
 
-## 14.5. Test handling
+## 15.5. Test handling
 
 After that, the following part is injected:
 
@@ -86,10 +86,10 @@ for test in tests:
     with test:
 ```
 
-This part is followed by code that depends on the problem type. For technical reasons, the code blocks in this and the following chapter (13.5.1 and forwards, up to and including 14.6) are not indented to two levels as they should be.
+This part is followed by code that depends on the problem type. For technical reasons, the code blocks in this and the following chapter (15.5.1 and forwards, up to and including 15.6) are not indented to two levels as they should be.
 
 
-## 14.5.1. I/O
+## 15.5.1. I/O
 
 If the problem type is `io`, the following code is injected:
 
@@ -100,7 +100,7 @@ checker(test.input, output, test.answer)
 ```
 
 
-### 14.5.2. Interactive
+### 15.5.2. Interactive
 
 If the problem type is `interactive`, the following code is injected:
 
@@ -113,7 +113,7 @@ checker(test.input, interactor_output, test.answer)
 ```
 
 
-### 14.5.3. Run-twice
+### 15.5.3. Run-twice
 
 If the problem type is `run-twice`, the following code is injected:
 
@@ -126,7 +126,7 @@ checker(run2_input, run2_output, test.answer)
 ```
 
 
-### 14.5.4. Run-twice interactive
+### 15.5.4. Run-twice interactive
 
 If the problem type is `run-twice-interactive`, the following code is injected:
 
@@ -140,7 +140,7 @@ checker(run2_input, run2_output, test.answer)
 ```
 
 
-### 14.5.5. Run-twice double interactive
+### 15.5.5. Run-twice double interactive
 
 If the problem type is `run-twice-double-interactive`, the following code is injected:
 
@@ -155,9 +155,9 @@ checker(run2_input, interactor_output, test.answer)
 ```
 
 
-## 14.6. Points
+## 15.6. Points
 
-If the field `{TREAT-POINTS-FROM-CHECKER-AS-PERCENT}` from [11. Judging](11-judging.md) is set, the following chunk is appended to each test:
+If the field `{TREAT-POINTS-FROM-CHECKER-AS-PERCENT}` from [12. Judging](12-judging.md) is set, the following chunk is appended to each test:
 
 ```python
 if isinstance(test.verdict, PE):
@@ -165,12 +165,12 @@ if isinstance(test.verdict, PE):
 ```
 
 
-## 14.7. Scoring
+## 15.7. Scoring
 
-Finally, if a scorer is listed in [10. Assets](10-assets.md), another chunk is appended, based on the scorer type.
+Finally, if a scorer is listed in [11. Assets](11-assets.md), another chunk is appended, based on the scorer type.
 
 
-### 14.7.1. `codeforces`
+### 15.7.1. `codeforces`
 
 ```python
 tests_passed = sum(test.verdict == OK for test in tests, 0)
@@ -184,7 +184,7 @@ submission.rate(PT(points))
 ```
 
 
-### 14.7.2. `ejudge`
+### 15.7.2. `ejudge`
 
 ```python
 scorer_in, scorer_out = File(), File()

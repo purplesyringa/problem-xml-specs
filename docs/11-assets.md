@@ -1,4 +1,4 @@
-# 10. Assets
+# 11. Assets
 
 Assets are the various problem-wide programs and scripts, for example, the checker. We will provide a stripped-down version of the format of the `<assets>` tag first, just how it appears in classical problems, and then generalize that.
 
@@ -8,6 +8,7 @@ The basic structure of the tag `<assets>` of `problem.xml` is:
 <assets>
     {CHECKER}
     [{SCORER}]
+    [{ARBITER}]
     [{INTERACTOR}]
     [<validators>{VALIDATOR}</validators>]
     <solutions>
@@ -23,7 +24,7 @@ The basic structure of the tag `<assets>` of `problem.xml` is:
 The checker is always present, and the interactor may be omitted. The tags `<validators>` and `<solutions>` may be omitted if no validators or model solutions are present respectively.
 
 
-## 10.1. Checker
+## 11.1. Checker
 
 The checker is listed as follows:
 
@@ -48,11 +49,11 @@ The checker is listed as follows:
 
 `{NAME}` is an optional checker identifier reserved to built-in checkers, e.g. `std::ncmp.cpp`. This field SHOULD NOT be used by the judge. Examples of built-in checkers are provided in [examples/std-checkers](examples/std-checkers), barring the `std::` prefix due to path name limitations.
 
-The checker MUST be listed in `<executables>` according to [9. Files](09-files.md). `{SOURCES}` and `{BINARIES}` MUST match the values specified there.
+The checker MUST be listed in `<executables>` according to [10. Files](10-files.md). `{SOURCES}` and `{BINARIES}` MUST match the values specified there.
 
 If there is exactly one source file, the `<copy>` tag can be used to specify that it is also copied to `{COPY-PATH}`. This is to support legacy systems that require the checker to be present in the root of the package with name `check.cpp`. Judges SHOULD NOT rely on existence of this field.
 
-`<testset>` contains information on checker unit tests. Patterns are filesystem path patterns as described in [13. Path patterns](13-path-patterns.md). `{CHECKER-TEST-COUNT}` MUST be equal to the number of nodes in `<tests>`. A single test has the following format:
+`<testset>` contains information on checker unit tests. Patterns are filesystem path patterns as described in [14. Path patterns](14-path-patterns.md). `{CHECKER-TEST-COUNT}` MUST be equal to the number of nodes in `<tests>`. A single test has the following format:
 
 ```xml
 <test verdict="{VERDICT}" />
@@ -66,7 +67,7 @@ The `{i}`-th node specifies the expected output of the checker on the `{i}`-th t
 - `crashed` for CF.
 
 
-## 10.2. Scorer
+## 11.2. Scorer
 
 The scorer, also known as valuer, is used to compile test verdicts to a single submission verdict. If present, it is listed as follows:
 
@@ -77,17 +78,33 @@ The scorer, also known as valuer, is used to compile test verdicts to a single s
 </scorer>
 ```
 
-The scorer MUST be listed in `<executables>` according to [9. Files](09-files.md). `{SOURCES}` and `{BINARIES}` MUST match the values specified there.
+The scorer MUST be listed in `<executables>` according to [10. Files](10-files.md). `{SOURCES}` and `{BINARIES}` MUST match the values specified there.
 
 `{SCORER-TYPE}` is one of the following values:
 
 - `codeforces` (default),
 - `ejudge`.
 
-We will get to what it means later, in [14. Defaults](14-defaults.md).
+We will get to what it means later, in [15. Defaults](15-defaults.md).
 
 
-## 10.3. Interactor
+## 11.3. Arbiter
+
+The arbiter handles cross-submission verdict assignment as described in [7. Arbitration](07-arbitration.md). If present, it is listed as follows:
+
+```xml
+<arbiter [type="{ARBITER-TYPE}"]>
+    {SOURCES}
+    {BINARIES}
+</arbiter>
+```
+
+The arbiter MUST be listed in `<executables>` according to [10. Files](10-files.md). `{SOURCES}` and `{BINARIES}` MUST match the values specified there.
+
+`{ARBITER-TYPE}` MUST be `problem-xml`.
+
+
+## 11.4. Interactor
 
 The interactor, if present, is listed as follows:
 
@@ -99,7 +116,7 @@ The interactor, if present, is listed as follows:
 </interactor>
 ```
 
-The interactor MUST be listed in `<executables>` according to [9. Files](09-files.md). `{SOURCES}` and `{BINARIES}` MUST match the values specified there.
+The interactor MUST be listed in `<executables>` according to [10. Files](10-files.md). `{SOURCES}` and `{BINARIES}` MUST match the values specified there.
 
 The `{RUNS}` field is used only for run-twice problems. If it is present, it MUST look exactly like:
 
@@ -110,10 +127,10 @@ The `{RUNS}` field is used only for run-twice problems. If it is present, it MUS
 </runs>
 ```
 
-We will get to what it means later, in [14. Defaults](14-defaults.md).
+We will get to what it means later, in [15. Defaults](15-defaults.md).
 
 
-## 10.4. Validator
+## 11.5. Validator
 
 The validator, if present, is listed as:
 
@@ -133,9 +150,9 @@ The validator, if present, is listed as:
 </validator>
 ```
 
-The validator MUST be listed in `<executables>` according to [9. Files](09-files.md). `{SOURCES}` and `{BINARIES}` MUST match the values specified there.
+The validator MUST be listed in `<executables>` according to [10. Files](10-files.md). `{SOURCES}` and `{BINARIES}` MUST match the values specified there.
 
-`<testset>` contains information on validator unit tests. Patterns are filesystem path patterns as described in [13. Path patterns](13-path-patterns.md). `{VALIDATOR-TEST-COUNT}` MUST be equal to the number of nodes in `<tests>`. A single test has the following format:
+`<testset>` contains information on validator unit tests. Patterns are filesystem path patterns as described in [14. Path patterns](14-path-patterns.md). `{VALIDATOR-TEST-COUNT}` MUST be equal to the number of nodes in `<tests>`. A single test has the following format:
 
 ```xml
 <test verdict="{VERDICT}" />
@@ -152,7 +169,7 @@ validator <{INPUT-FILE}
 ...and return verdicts via a testlib-style exit code, either OK or PE.
 
 
-## 10.5. Model solutions
+## 11.6. Model solutions
 
 The `<solutions>` tag lists authors' solutions in the following format:
 
@@ -181,7 +198,7 @@ The checker MUST NOT be listed in `<executables>`, because it is not necessary f
 - `failed`: the solution fails with CF verdict.
 
 
-## 10.6. Other programs
+## 11.7. Other programs
 
 Other programs are defined in the `<programs>` tag as follows:
 
@@ -202,7 +219,7 @@ A single program is defined as:
 </program>
 ```
 
-The program MUST be listed in `<executables>` according to [9. Files](09-files.md). `{SOURCES}` and `{BINARIES}` MUST match the values specified there.
+The program MUST be listed in `<executables>` according to [10. Files](10-files.md). `{SOURCES}` and `{BINARIES}` MUST match the values specified there.
 
 The program will be accessible to the strategy by name `{NAME}`.
 
@@ -229,7 +246,7 @@ Similarly, an interactor can be defined as:
 ...and, if the problem is not run-twice, this will be identical to a dedicated `<interactor>` tag, except for legacy judges that can't parse `<programs>`. For this reason, preparation systems SHOULD abstain from using `<programs>` for checkers, interactors, and validators.
 
 
-## 10.7. Strategy
+## 11.8. Strategy
 
 Finally, problems that want to use a custom strategy as described in [2. Pipelines](02-pipelines.md), MUST use the following tag:
 

@@ -1,6 +1,6 @@
-# 13. Path patterns
+# 14. Path patterns
 
-Path patterns were mentioned in [10. Assets](10-assets.md) and [11. Judging](11-judging.md) when describing how tests are referenced.
+Path patterns were mentioned in [11. Assets](11-assets.md) and [12. Judging](12-judging.md) when describing how tests are referenced.
 
 Instead of a list of file paths, one for each test, a single C format string is provided. This pattern MUST be a string containing exactly one `%` character, immediately followed either by `d`, or `0` and then a number followed by `d`. For instance, `tests/%d`, `tests/%d.in`, and `tests/%02d.in` are valid patterns.
 

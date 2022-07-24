@@ -1,4 +1,4 @@
-# 11. Judging
+# 12. Judging
 
 The tag `<judging>` of `problem.xml` has, perhaps, the most complicated structure, because it stores a lot of information. We will separate this mess into two categories: informative fields and fields that are used to generate the default strategy.
 
@@ -17,7 +17,7 @@ The latter category includes:
 - How PT verdict is interpreted.
 
 
-## 11.1. Common format
+## 12.1. Common format
 
 The tag has the following format:
 
@@ -40,10 +40,10 @@ The tag has the following format:
 
 `{CPU-SPEED}` is the maximum frequency of the procesor in MHz.
 
-The fields `{INPUT-FILE}`, `{OUTPUT-FILE}`, `{RUN-COUNT}`, and `{TREAT-POINTS-FROM-CHECKER-AS-PERCENT}` are used to generate the default strategy and are described later in [14. Defaults](14-defaults.md).
+The fields `{INPUT-FILE}`, `{OUTPUT-FILE}`, `{RUN-COUNT}`, and `{TREAT-POINTS-FROM-CHECKER-AS-PERCENT}` are used to generate the default strategy and are described later in [15. Defaults](15-defaults.md).
 
 
-## 11.2. Testsets
+## 12.2. Testsets
 
 In most cases, all submissions are judged on the exact same tests in the exact same way. But there are exceptions: on Codeforces and some olympiads pretests are separated from system tests, and there may be other reasons to be able to apply different "patterns" of testing. That's what testsets are for.
 
@@ -65,12 +65,12 @@ A testset is a group of tests, independent from other testsets, with its own lim
 </testset>
 ```
 
-`{TIME-LIMIT}` is the CPU time limit in milliseconds. `{MEMORY-LIMIT}` is the memory limit in bytes. Patterns are filesystem path patterns as described in [13. Path patterns](13-path-patterns.md). `{TEST-COUNT}` MUST be equal to the number of nodes in `<tests>`.
+`{TIME-LIMIT}` is the CPU time limit in milliseconds. `{MEMORY-LIMIT}` is the memory limit in bytes. Patterns are filesystem path patterns as described in [14. Path patterns](14-path-patterns.md). `{TEST-COUNT}` MUST be equal to the number of nodes in `<tests>`.
 
 Only the names `pretests` and `tests` are allowed. When users write contests, virtual or real, the `pretests` testset should be used for testing, and all submissions are to be retested on the `tests` testset after the contest ends, although judges MAY perform system testing in background without showing the results to the user. The tests of `pretests` MUST be a prefix of tests from `tests`.
 
 
-## 11.3. Tests
+## 12.3. Tests
 
 A single test has the following format:
 

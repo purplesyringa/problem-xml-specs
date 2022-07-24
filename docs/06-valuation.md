@@ -50,11 +50,7 @@ A comment is attached to each verdict that explains in detail what went wrong. T
 
 ## 6.4. Submission verdicts
 
-The verdicts of the submission on all tests are typically combined to produce a single verdict. This **submission verdict** is similar to per-test verdicts, but there are certain differences, so we list all the possible verdicts anyway.
-
-Note that in typical IOI-style problems the submission can get positive points even if some tests fail, so the verdict is detached from the actual number of points. This will be covered below.
-
-The verdicts are:
+The verdicts of the submission on all tests are typically combined to produce a single verdict. This **submission verdict** is similar to per-test verdicts, but there are certain differences, so we list all the possible verdicts anyway:
 
 - **Accepted (AC)**: the submission passed all tests successfully and is considered a full solution,
 - **WA, RE, TL, ML, PE, IL, SV**: all tests failed, and the first failed test has this verdict; the test number is attached, and the short form SHOULD be `{VERDICT-ON-FAILED-TEST} {FAILED-TEST-NO}`,
@@ -77,7 +73,7 @@ This applies to submission judgement on two levels: firstly, the output of the s
 
 So there is another test verdict that MUST be supported:
 
-- **Partial solution (PT)**: the submission printed a well-founded answer, for some definition of well-founded, and the checker graded it as partially correct.
+- **Partial solution (PT)**: the solution printed a well-founded answer, for some definition of well-founded, and the checker graded it as partially correct.
 
 What this means heavily depends on the problem: perhaps the solution is suboptimal but still "correct" (e.g. if the problem is to find as short Hamiltonian path as possible), or that only a part of the problem was solved (e.g. the length of an optimal path was printed, but not the path itself), or something else entirely.
 
@@ -125,7 +121,14 @@ If the feedback policy is `none` and the points policy is `complete-group`, the 
 Additionally, a group may have **dependencies**, which are other groups that must all be passed for the present group to be judged. Dependencies form a directed acyclic graph. A test from a group a dependency of which did not pass MUST have IG verdict. A group is considered passed if all its tests have verdict OK.
 
 
-## 6.6. Testlib output
+## 6.7. Realtime verdicts
+
+For better responsibility, some judges show testing progress while the submission is tested, including the number of points secured by the solution so far. This number is not simply the sum of points on the tests judged so far--that wouldn't work correctly--but the current lower bound on the points that the submission is guaranteed to get.
+
+If the judge supports such realtime verdict assignment, and the strategy did not call `submission.disable_autorate`, the behavior is obvious. If `submission.disable_autorate` is called, `submission.rate` can be called multiple times: the last call sets the final verdict, and all other calls are realtime updates, which MUST all be either `AC` or `PT`.
+
+
+## 6.8. Testlib output
 
 Checkers and interactors usually use the [testlib](https://codeforces.com/testlib) library.
 

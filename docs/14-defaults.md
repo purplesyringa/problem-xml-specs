@@ -3,9 +3,20 @@
 If a problem does not provide a strategy as specified in [10. Assets](10-assets.md), one is generated automatically. This section describes how this is done.
 
 
-## 14.1. Problem types
+## 14.1. Options
 
-Firstly, the problem type is determined. This type can be either of the following:
+At the very start of the strategy, options are configured.
+
+If a scorer is listed in [10. Assets](10-assets.md), the strategy starts with:
+
+```python
+submission.disable_autorate()
+```
+
+
+## 14.2. Problem types
+
+The problem type is determined. This type can be either of the following:
 
 - `io`,
 - `interactive`,
@@ -20,7 +31,7 @@ If it contains the field `run-count="2"`, the algorithm is as follows: if an int
 If `<judging>` does not have the `run-count` field, the algorithm is as follows: if the tag `run-twice` is not present in `<tags>` (see [8. Localization](08-localization.md)), the type is `io`. Otherwise, the type is based on whether the program has an interactor: if it does, the type is `run-twice-double-interactive`, otherwise it is `run-twice`.
 
 
-## 14.2. Compilation
+## 14.3. Compilation
 
 At the start of the strategy, the user submission is compiled. Resources listed in [9. Files](09-files.md) that have matching `for-type` fields and have `compile` stage and `solution` asset enabled are compiled with the submission:
 
@@ -38,7 +49,7 @@ user = await compile(submission, *libraries)
 `compile` automatically determines which source files are parts of secure graders and links them safely, as described in [5. Grading](05-grading.md).
 
 
-## 14.3. Limits and streams
+## 14.4. Limits and streams
 
 Let us denote the fields `{TIME-LIMIT}`, `{MEMORY-LIMIT}`, `{INPUT-FILE}`, and `{OUTPUT-FILE}` from [11. Judging](11-judging.md) by `time_limit`, `memory_limit`, `input_file`, and `ouptut_file`, respectively.
 
@@ -66,7 +77,7 @@ def invoke(stdin, stdout):
 ```
 
 
-## 14.4. Test handling
+## 14.5. Test handling
 
 After that, the following part is injected:
 
@@ -75,10 +86,10 @@ for test in tests:
     with test:
 ```
 
-This part is followed by code that depends on the problem type. For technical reasons, the code blocks in this chapter (13.4.1 and forwards) are not indented to two levels as they should be.
+This part is followed by code that depends on the problem type. For technical reasons, the code blocks in this and the following chapter (13.5.1 and forwards, up to and including 14.6) are not indented to two levels as they should be.
 
 
-## 14.4.1. I/O
+## 14.5.1. I/O
 
 If the problem type is `io`, the following code is injected:
 
@@ -89,7 +100,7 @@ checker(test.input, output, test.answer)
 ```
 
 
-### 14.4.2. Interactive
+### 14.5.2. Interactive
 
 If the problem type is `interactive`, the following code is injected:
 
@@ -102,7 +113,7 @@ checker(test.input, interactor_output, test.answer)
 ```
 
 
-### 14.4.3. Run-twice
+### 14.5.3. Run-twice
 
 If the problem type is `run-twice`, the following code is injected:
 
@@ -115,7 +126,7 @@ checker(run2_input, run2_output, test.answer)
 ```
 
 
-### 14.4.4. Run-twice interactive
+### 14.5.4. Run-twice interactive
 
 If the problem type is `run-twice-interactive`, the following code is injected:
 
@@ -129,7 +140,7 @@ checker(run2_input, run2_output, test.answer)
 ```
 
 
-### 14.4.5. Run-twice double interactive
+### 14.5.5. Run-twice double interactive
 
 If the problem type is `run-twice-double-interactive`, the following code is injected:
 
@@ -144,23 +155,22 @@ checker(run2_input, interactor_output, test.answer)
 ```
 
 
-## 14.5. Points
+## 14.6. Points
 
-If the field `{TREAT-POINTS-FROM-CHECKER-AS-PERCENT}` from [11. Judging](11-judging.md) is set, the following chunk is appended:
+If the field `{TREAT-POINTS-FROM-CHECKER-AS-PERCENT}` from [11. Judging](11-judging.md) is set, the following chunk is appended to each test:
 
 ```python
-for test in tests:
-    if isinstance(test.verdict, PT):
-        test.verdict.points = test.points * (test.verdict.points / 100)
+if isinstance(test.verdict, PE):
+    test.verdict = PT(test.points * (test.verdict.points / 100))
 ```
 
 
-## 14.6. Scoring
+## 14.7. Scoring
 
 Finally, if a scorer is listed in [10. Assets](10-assets.md), another chunk is appended, based on the scorer type.
 
 
-### 14.6.1. `codeforces`
+### 14.7.1. `codeforces`
 
 ```python
 tests_passed = sum(test.verdict == OK for test in tests, 0)
@@ -174,7 +184,7 @@ submission.rate(PT(points))
 ```
 
 
-### 14.6.2. `ejudge`
+### 14.7.2. `ejudge`
 
 ```python
 scorer_in, scorer_out = File(), File()

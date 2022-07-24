@@ -107,7 +107,15 @@ Firstly, `submission` is the file sent to the judge by the user.
 
 Its Python type is `Submission`, which is in turn a subclass of `File`. `File` is a container for any sort of raw data. `File` can store the type of the contained file as specified in [3. Types](03-types.md). This type can be accessed and modified via the `type` property, which stores an instance of `Type`.
 
-In addition to all operations supported by files, `submission`has the `timestamp` property, which is the UNIX timestamp of the time the solution was submitted to the judge, and the `metadata` property, which is a dictionary of implementation-defined data; common fields are `id` for submission ID, `author` for the username of the author of the submission, and `contest_id` for contest ID. It also has the `submission.rate` and `submission.disable_autorate` methods, which are described below.
+In addition to all operations supported by files, `submission` has the following properties:
+
+- `timestamp`: the UNIX timestamp of the time the solution was submitted to the judge,
+- `id`: an implementation-defined unique string identifier of the submission,
+- `author`: an implementation-defined unique string identifier of the solution author,
+- `contest_id`: an implementation-defined unique string identifier of the contest,
+- `metadata`: a dictionary of implementation-defined data.
+
+It also has the `submission.rate` and `submission.disable_autorate` methods, which are described below.
 
 `Type` can be constructed using `Type("...")` and converted to a string using `str(...)`. `Type` represents a type mask. `Type.intersection(type1, type2, ...)` can be used to find the "best" concrete type that satisfies all of the given masks, or `None` if none exists. `type1.matches(type2)` can be used as a shortcut for `Type.intersection(type1, type2) is not None`. `type.matches("...")` is, again, a shortcut for `type.matches(Type("..."))`.
 

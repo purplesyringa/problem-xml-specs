@@ -77,7 +77,7 @@ So there is another test verdict that MUST be supported:
 
 What this means heavily depends on the problem: perhaps the solution is suboptimal but still "correct" (e.g. if the problem is to find as short Hamiltonian path as possible), or that only a part of the problem was solved (e.g. the length of an optimal path was printed, but not the path itself), or something else entirely.
 
-A real number is attached to this verdict, called **test points**. In short form, this verdict should be presented as `PT {POINTS}`, preferably with a space between `PT` and the points. The judge MUST be able to represent points from 0 to 100'000 or more with 0.0001 precision or better. `PT 0` MUST be differentiated from `WA`.
+A real number is attached to this verdict, called **test points**. In short form, this verdict should be presented as `PT {POINTS}`, with a space between `PT` and the points. The judge MUST be able to represent points from 0 to 100'000 or more with 0.0001 precision or better. `PT 0` MUST be differentiated from `WA`.
 
 Another submission verdict which MUST be supported is introduced:
 

@@ -20,7 +20,7 @@ The tag `<files>` of `problem.xml` is of the following structure:
 
 ## 10.1. Executables
 
-This section lists all executable files that are compiled from source, such as checkers and validators, without differentiating between them in any way. This section does not store any information that cannot be acquired from other locations of the `problem.xml` file and serves only as a compatibility mechanism.
+This section lists all executable files that are compiled from source, such as checkers, validators, and generators, without differentiating between them in any way.
 
 Executable files are described in the following way:
 

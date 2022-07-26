@@ -55,6 +55,12 @@ The following verdict MAY be supported:
 
 A comment is attached to each verdict that explains in detail what went wrong. Typically, this comment is not shown to the user as it make leak information that can make problem solving easier.
 
+If several verdicts are set automatically while judging a test, the "worst" verdict is set:
+
+- If any program triggers CF, the test verdict is CF,
+- If any (user) program fails (i.e. has verdict RE, TL, ML, IL, or SV, or perhaps CE), the test verdict is copied from the program's verdict,
+- Otherwise, which of the set verdicts is used is undefined. For instance, if a problem-wide program emits WA and another problem-wide program emits PE, the test verdict may be either PE or WA.
+
 
 ## 6.4. Submission verdicts
 

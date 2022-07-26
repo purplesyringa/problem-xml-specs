@@ -16,7 +16,9 @@ When programs (of any kind) are run, the judge MUST track all information from t
 - **real time**--how much wall-clock time passed between the moment the program was started and finished,
 - **exit status**--the exit code the program returned upon termination or the signal it was killed with.
 
-Problemsetters MUST be able to set limits on CPU time and memory and SHOULD be able to set limits on real time, and MUST be able to apply different limits to different program kinds.
+In addition, **idleness time** is computed by subtracting CPU time from real time.
+
+Problemsetters MUST be able to set limits on CPU time and memory and SHOULD be able to set limits on real time and idleness time. They MUST be able to apply different limits to different program kinds.
 
 Typically, not all of the metrics are public. Usually, only CPU time and memory usage of the user program are shown to the user.
 
@@ -42,7 +44,7 @@ After a submission is graded, a verdict is attached to each test first, rather t
 - **Time limit exceeded (TL or TLE)**: the submission used more CPU time than allowed,
 - **Memory limit exceeded (ML or MLE)**: the submission used more RAM than allowed,
 - **Presentation error (PE)**: the submission stayed within the limits and printed something, but the output could not be parsed due to invalid format,
-- **Idleness limit exceeded (IL or ILE)**: the submission used more real (wall-clock) time than allowed,
+- **Idleness limit exceeded (IL or ILE)**: the submission either used more real (wall-clock) time than allowed, or the idleness time metric exceeded the limit,
 - **Check failed (CF)**: the checker, interactor, or other problem-wide program returned an invalid exit code, was killed by a singal, or exceeded limits,
 - **Compilation error (CE)**: code was compiled during the test rather than before judgement, as can happen in compile-on-each-test problems,
 - **Ignored (IG)**: the judge deemed it unnecessary to run the test because it would not affect the score; this is elaborated upon below.

@@ -125,13 +125,15 @@ It also has the `submission.rate` and `submission.disable_autorate` methods, whi
 
 Executables that are attached to the problem, such as checkers and validators, are stored as `Executable` objects named `checker`, `validator`, etc. This can be customized.
 
-A `Limits` object stores the various limitations the program is subject to. The mandatory limits are `time` (in seconds), `memory` (in bytes), and `real_time` (in seconds), e.g. `Limits(time=1)`. Systems MAY implement their own custom limitations.
+A `Limits` object stores the various limitations the program is subject to: `time` (in seconds), `memory` (in bytes), `real_time` (in seconds), and `idleness_time` (in seconds), e.g. `Limits(time=1)`. Systems MAY implement their own custom limitations. If a limit is not mentioned, defaults apply.
 
 `tests` is a global iterable of all tests of a program. It will not necessarily be a `list`, but it can be iterated by, yielding instances of `Test`.
 
-A `Test` object has a property called `no`, which stores the ID of test, usually in 1-indexation. It also *usually* has properties `input` and `answer`, each of type `File`, also `points` of type `float` in IOI-style problems and `group` of type `Group` if groups are enabled, but these properties may not be present, or other properties may be, if the problem is of a non-standard type--this is configurable. `test.verdict` contains the current test verdict. `test.metrics` contains the list of metrics, one per each run of the user program on this test.
+A `Test` object has a property called `no`, which stores the ID of test, usually in 1-indexation. It also *usually* has properties `input` and `answer`, each of type `File`, also `points` of type `float` in IOI-style problems and `group` of type `Group` if groups are enabled, but these properties may not be present, or other properties may be, if the problem is of a non-standard type--this is configurable. `test.verdict` contains the current test verdict. `test.metrics` contains the list of `Metrics`, one per each run of the user program on this test.
 
 A `Test` is a Python context manager, which means it can be passed as an argument to the `with` statement. Per-test operations MUST be wrapped in `with test`.
+
+A `Metrics` object contains `time` (in seconds), `memory` (in bytes), `real_time` (in seconds), and `idleness_time` (in seconds). See more in [6. Valuation](06-valuation.md).
 
 A `File` object can be created using the `File()` constructor, which creates a file of unknown type. The type can be passed at construction time via `File(type="...")`.
 
@@ -264,7 +266,7 @@ for test in tests:
 This demonstrates that the return value of an invocation is an `InvocationResult` object, which stores the following information:
 
 - a platform-dependent integral exit status at `exit_code`,
-- metrics, accessible via `metrics.time`, `metrics.memory`, `metrics.real_time`, etc.,
+- metrics of type `Metrics`,
 - the verdict at `verdict` and the comment at `comment` for `testlib` kind.
 
 In this example, the points of a submission on a test are equial to the maximum points of test times `min(1, 0.1 / CPU time used by the submission)`.

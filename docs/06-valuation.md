@@ -5,21 +5,27 @@ The judge consumes user submissions, which are just files, and emits some result
 
 ## 6.1. Metrics
 
-When the user submission is invoked and judged, the judge MUST track all information from the following list:
+Usually, programs cannot be allowed to run indeterminately. If user submissions are run forever, DoS attacks are possible. If problem-wide programs are run with no limitations, bugs can bring trouble too. This is avoided by introducing metrics and limits.
 
-- **CPU time**, also **time**--how much time the processor spent handling the user processes, summed up across CPU cores,
-- **memory**--the maximum amount of physical memory (not virtual memory!) allocated to the user processes at once,
-- **real time**--how much wall-clock time passed between the moment the user submission was started and finished,
+Limits apply to programs of all kinds: `user`, `system`, and `testlib`, although the limits are usually different for different kinds, and the repercussions and different too.
+
+When programs (of any kind) are run, the judge MUST track all information from the following list:
+
+- **CPU time**, also **time**--how much time the processor spent handling the program's processes, summed up across CPU cores,
+- **memory**--the maximum amount of physical memory (not virtual memory!) allocated to the processes at once,
+- **real time**--how much wall-clock time passed between the moment the program was started and finished,
 - **exit status**--the exit code the program returned upon termination or the signal it was killed with.
 
-Problemsetters MUST be able to set limits on CPU time and memory and SHOULD be able to set limits on real time.
+Problemsetters MUST be able to set limits on CPU time and memory and SHOULD be able to set limits on real time, and MUST be able to apply different limits to different program kinds.
 
-Typically, not all of this information is public: usually, only CPU time and memory usage are shown to the user.
+Typically, not all of the metrics are public. Usually, only CPU time and memory usage of the user program are shown to the user.
+
+Metrics are collected for each program launch. Typically, this means exactly one metric of `user` kind is collected per test. If, however, user code is run several times, metrics of all runs MUST be collected. What information is shown to the user is implementation-defined, but showing metrics of all runs SHOULD be preferred. As a fallback, showing the elementwise maximum as if a single run was done is allowed.
 
 
 ## 6.2. Logs
 
-The steram stdout and stderr of all invoked programs SHOULD be saved, unless they are redirected to pipes. Whether interaction protocols are recorded is implementation-defined.
+The stdout and stderr streams of all invoked programs SHOULD be saved, unless they are redirected to pipes. Whether interaction protocols are recorded is implementation-defined.
 
 
 ## 6.3. Test verdicts

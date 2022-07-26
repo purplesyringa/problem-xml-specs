@@ -129,7 +129,7 @@ A `Limits` object stores the various limitations the program is subject to. The 
 
 `tests` is a global iterable of all tests of a program. It will not necessarily be a `list`, but it can be iterated by, yielding instances of `Test`.
 
-A `Test` object has a property called `no`, which stores the ID of test, usually in 1-indexation. It also *usually* has properties `input` and `answer`, each of type `File`, also `points` of type `float` in IOI-style problems and `group` of type `Group` if groups are enabled, but these properties may not be present, or other properties may be, if the problem is of a non-standard type--this is configurable. `test.verdict` contains the current test verdict. `test.metrics` contains the per-element maximum of metrics among all runs of the user program on this test.
+A `Test` object has a property called `no`, which stores the ID of test, usually in 1-indexation. It also *usually* has properties `input` and `answer`, each of type `File`, also `points` of type `float` in IOI-style problems and `group` of type `Group` if groups are enabled, but these properties may not be present, or other properties may be, if the problem is of a non-standard type--this is configurable. `test.verdict` contains the current test verdict. `test.metrics` contains the list of metrics, one per each run of the user program on this test.
 
 A `Test` is a Python context manager, which means it can be passed as an argument to the `with` statement. Per-test operations MUST be wrapped in `with test`.
 

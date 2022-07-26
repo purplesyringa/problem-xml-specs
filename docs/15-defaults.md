@@ -212,7 +212,7 @@ for test in tests:
     else:
         s = 0
 
-    t = int(test.metrics.time * 1000)
+    t = int(max(metric.time for metric in test.metrics) * 1000)
 
     scorer_out.write(f"{r} {s} {t}\n".encode())
 

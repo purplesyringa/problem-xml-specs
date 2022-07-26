@@ -166,12 +166,12 @@ The C# programming language supports passing multiple source files to the compil
 
 The paragraph below applies in case the entrypoint file is not the user's submission.
 
-The main user class MUST be public and SHOULD have the name `Solution`. Otherwise, if there is exactly one public class, an implicit using directive SHOULD be added to make `Solution` an alias of the class. Otherwise, if there is exactly one class, an implicit using directive SHOULD be added to make `Solution` an alias of the class. Otherwise, the submission MAY be considered ill-formed.
+The main user class MUST be public. If there are several public classes, the class with name `Solution` is considered the public one, and if it doesn't exist, the submission is considered ill-formed. Otherwise, if the name of the one and only public class is not `Solution`, an implicit using directive MUST be added to make `Solution` an alias of this class.
 
 
 ### 4.2.4. Common Lisp
 
-The Common Lisp programming language does not support passing multiple source files to the compiler. The user submission MUST have file name `solution.cl`. Problem-provided files MUST be accessible using `(load "{PATH}")`; `{PATH}` MUST NOT include the `cl` extension to enable pre-compilation. Similarly, the submission MUST be accessible to the problem files using `(load "solution")`.
+The Common Lisp programming language does not support passing multiple source files to the compiler. Problem-provided files MUST be accessible using `(load "{PATH}")`; `{PATH}` MUST NOT include the `cl` or `lisp` extension to enable pre-compilation. Similarly, the user file MUST be accessible to the problem-wide programs using `(load *solution*)`. If there is more than one user-kind file, a "virtual" solution is to be provided, containing `(load ...)` directives that load all the user files in some undefined order.
 
 As `clisp` does not load rc files in batch mode, a separate virtual entrypoint that calls the real entrypoint and then exits SHOULD be passed to the interpreter.
 
@@ -180,9 +180,9 @@ CL supports per-file compilation with `(compile-file)` or an equivalent compiler
 
 ### 4.2.5. D
 
-The D programming language supports passing multiple source files to the compiler. The user submission MUST have file name `solution.d` and be accessible using `import solution`. The specified entrypoint does not affect compilation in any way.
+The D programming language supports passing multiple source files to the compiler. The user submission MUST be accessible to the problem-wide files using `import solution`; if the name of the user file is not `solution.d`, a virtual file that re-exports the user code is to be provided. The specified entrypoint does not affect compilation in any way.
 
 
 ### 4.2.6. Dart
 
-The Common Lisp programming language does not support passing multiple source files to the compiler. The user submission MUST have file name `solution.dart`. Problem-provided files MUST be accessible using `import`. The specified entrypoint does not affect compilation in any way.
+The Common Lisp programming language does not support passing multiple source files to the compiler. The user submission MUST be accessible to the problem-wide files using `import "solution.dart"`; if the name of the user file is not `solution.dart`, a virtual file that re-exports the user code is to be provided. Problem-provided files MUST be accessible using `import`. The specified entrypoint does not affect compilation in any way.

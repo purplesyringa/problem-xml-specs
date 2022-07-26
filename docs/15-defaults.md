@@ -108,7 +108,7 @@ If the problem type is `interactive`, the following code is injected:
 interactor_output = File()
 i2u, u2i = Pipe(), Pipe()
 invoke(stdin=i2u, stdout=u2i)
-interactor(test.input, interactor_output, test.answer, stdin=u2i, stdout=i2u)
+interactor(test.input, interactor_output.rw(), test.answer, stdin=u2i, stdout=i2u)
 checker(test.input, interactor_output, test.answer)
 ```
 
@@ -134,7 +134,7 @@ If the problem type is `run-twice-interactive`, the following code is injected:
 run2_input, run2_output = File(), File()
 i2u, u2i = Pipe(), Pipe()
 invoke(stdin=i2u, stdout=u2i)
-interactor(test.input, run2_input, test.answer, stdin=u2i, stdout=i2u)
+interactor(test.input, run2_input.rw(), test.answer, stdin=u2i, stdout=i2u)
 invoke(stdin=run2_input, stdout=run2_output)
 checker(run2_input, run2_output, test.answer)
 ```
@@ -148,9 +148,9 @@ If the problem type is `run-twice-double-interactive`, the following code is inj
 run2_input, interactor_output = File(), File()
 run1_i2u, run1_u2i, run2_i2u, run2_u2i = Pipe(), Pipe(), Pipe(), Pipe()
 invoke(stdin=run1_i2u, stdout=run1_u2i)
-interactor(test.input, run2_input, test.answer, stdin=run1_u2i, stdout=run1_i2u)
+interactor(test.input, run2_input.rw(), test.answer, stdin=run1_u2i, stdout=run1_i2u)
 invoke(stdin=run2_i2u, stdout=run2_u2i)
-interactor(run2_input, interactor_output, test.answer, stdin=run2_u2i, stdout=run2_i2u)
+interactor(run2_input, interactor_output.rw(), test.answer, stdin=run2_u2i, stdout=run2_i2u)
 checker(run2_input, interactor_output, test.answer)
 ```
 

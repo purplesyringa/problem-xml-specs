@@ -137,9 +137,9 @@ A `File` object can be created using the `File()` constructor, which creates a f
 
 An `Executable` object can be invoked by calling the object directly: `executable(*argv, stdin=..., stdout=..., stderr=..., files=..., limits=...)`:
 
-- An item of `argv` can be a string, a `bytes` object, a `File`, and also a `Pipe`, which is described in the next section. If an item is a `File` or a `Pipe`, the path to the object on the filesystem is passed as an argument.
-- The default values of `stdin`, `stdout`, and `stderr` are `None`, which is equivalent to writing to or reading from `/dev/null`, `NUL`, or equivalent.
-- `files` is an optional dictionary of relative path to `File` mapping. If it is specified, the user program will be able to access the provided files at the given paths.
+- An item of `argv` can be a string, a `bytes` object, a `File`, and also a `Pipe`, which is described in the next section. If an item is a `File` or a `Pipe`, the file is mounted read-only and the path to the object on the filesystem is passed as an argument. `file.rw()` can be passed to make the mount read-write.
+- `File` and `Pipe` objects can be passed as `stdin`, `stdout`, and `stderr`. The default values are `None`, which is equivalent to writing to or reading from `/dev/null`, `NUL`, or equivalent.
+- `files` is an optional dictionary of relative path to `File` mapping. If it is specified, the user program will be able to read the provided files at the given paths. `file.rw()` can be passed to make the mount read-write.
 - `limits` sets the limits; if it is missing, or if it's present but a property is missing, default values apply. These defaults SHOULD be problem-configurable.
 
 The function returns an asynchronous future. Invocation is performed even if the future is not awaited.
@@ -166,7 +166,7 @@ for test in tests:
         interactor_output = File()
         i2u, u2i = Pipe(), Pipe()
         user(stdin=i2u, stdout=u2i)
-        interactor(test.input, interactor_output, test.answer, stdin=u2i, stdout=i2u)
+        interactor(test.input, interactor_output.rw(), test.answer, stdin=u2i, stdout=i2u)
         checker(test.input, interactor_output, test.answer)
 ```
 
@@ -183,7 +183,7 @@ user = await compile(submission)
 for test in tests:
     with test:
         output = File()
-        user(stdin=test.input, stdout=output, files={"input.txt": test.input, "output.txt": output})
+        user(stdin=test.input, stdout=output, files={"input.txt": test.input, "output.txt": output.rw()})
         checker(test.input, output, test.answer)
 ```
 

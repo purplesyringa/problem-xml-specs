@@ -83,7 +83,8 @@ The scorer MUST be listed in `<executables>` according to [10. Files](10-files.m
 `{SCORER-TYPE}` is one of the following values:
 
 - `codeforces` (default),
-- `ejudge`.
+- `ejudge`,
+- `problem-xml`.
 
 We will get to what it means later, in [15. Defaults](15-defaults.md).
 

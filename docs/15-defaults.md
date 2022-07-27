@@ -221,3 +221,35 @@ points = int(scorer_out.read().decode())
 
 submission.rate(PT(points))
 ```
+
+
+### 15.7.3. `problem-xml`
+
+```python
+scorer_data = []
+for test in tests:
+    data = {
+        "no": test.no,
+        "verdict": str(test.verdict),
+        "comment": test.comment or "",
+        "metrics": {
+            "time": test.metrics.time,
+            "memory": test.metrics.memory,
+            "real_time": test.metrics.real_time,
+            "idleness_time": test.metrics.idleness_time,
+        }
+    }
+    if test.points is not None:
+        data["points"] = test.points
+    if test.group is not None:
+        data["group"] = test.group
+    scorer_data.append(data)
+
+import json
+
+scorer_in, scorer_out = File(), File()
+scorer_in.write(json.dumps(scorer_data).encode() + b"\n")
+await scorer(stdin=scorer_in, stdout=scorer_out)
+scorer_output = json.loads(scorer_out.read().decode())
+
+submission.rate(Verdict(scorer_output["verdict"]), comment=scorer_output.get("comment", ""))

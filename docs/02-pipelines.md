@@ -129,9 +129,11 @@ A `Limits` object stores the various limitations the program is subject to: `tim
 
 `tests` is a global iterable of all tests of a program. It will not necessarily be a `list`, but it can be iterated by, yielding instances of `Test`.
 
-A `Test` object has a property called `no`, which stores the ID of test, usually in 1-indexation. It also *usually* has properties `input` and `answer`, each of type `File`, also `points` of type `float` in IOI-style problems and `group` of type `Group` if groups are enabled, but these properties may not be present, or other properties may be, if the problem is of a non-standard type--this is configurable. `test.verdict` contains the current test verdict. `test.metrics` contains the list of `Metrics`, one per each run of the user program on this test.
+A `Test` object has a property called `no`, which stores the ID of test, usually in 1-indexation. It also *usually* has properties `input` and `answer`, each of type `File`, also `points` of type `float` in IOI-style problems and `group` of type `Group` if groups are enabled, but these properties may not be present, or other properties may be, if the problem is of a non-standard type--this is configurable. `test.verdict` and `test.comment` contain the current test verdict and comment, of types `Verdict` and `str` respectively. `test.metrics` contains the list of `Metrics`, one per each run of the user program on this test.
 
 A `Test` is a Python context manager, which means it can be passed as an argument to the `with` statement. Per-test operations MUST be wrapped in `with test`.
+
+A `Verdict` can be created from a string, e.g. `Verdict("OK")`, and converted to the short string form via `str(...)`. The verdicts are global variables named `OK`, `RE`, etc., as described in [6. Valuation](06-valuation.md), with the exception of `PT`, which is to be initialized as `PT(points)`.
 
 A `Metrics` object contains `time` (in seconds), `memory` (in bytes), `real_time` (in seconds), and `idleness_time` (in seconds). See more in [6. Valuation](06-valuation.md).
 
@@ -218,7 +220,7 @@ The verdicts on the tests are usually detected automatically according to the fo
 
 If no program fails, the verdict is considered OK, unless any program of kind `testlib` sets the verdict to PT, in which case that verdict is assumed. If several programs of kind `testlib` are called and none fails, either all of them MUST return OK, or one of them MUST return PE and all the others OK.
 
-The strategy can overwrite the verdict via a call to `test.rate`. This function takes a verdict, and then a comment as an optional argument. The verdicts are global variables named `OK`, `RE`, etc., as described in [6. Valuation](06-valuation.md), with the exception of `PT`, which is to be initialized as `PT(points)`. The verdict can later be accessed via the `test.verdict`, and the comment via `test.comment`.
+The strategy can overwrite the verdict via a call to `test.rate`. This function takes a verdict, and then a comment as an optional argument. The verdict can later be accessed via the `test.verdict`, and the comment via `test.comment`.
 
 
 ## 2.8. Arbitrary compilation

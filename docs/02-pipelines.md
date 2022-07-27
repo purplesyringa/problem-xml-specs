@@ -172,7 +172,7 @@ for test in tests:
         checker(test.input, interactor_output, test.answer)
 ```
 
-In this example, there is a new kind of object: `Pipe`. A `Pipe` refers to a named PIPE or an equivalent object, depending on the platform. A `Pipe` is not subject to the reader-after-writer feature of `File`. `Pipe`s are unidirectional: if a pipe is passed to an executable via `stdout` or `stderr`, only the write end is passed, and if it is passed via `argv` and `stdin`, only the read end is passed. If the write end of `pipe` is to be passed via `argv`, `pipe.as_writable()` should be passed instead.
+In this example, there is a new kind of object: `Pipe`. A `Pipe` refers to a named PIPE or an equivalent object, depending on the platform. A `Pipe` is not subject to the reader-after-writer feature of `File`. `Pipe`s are unidirectional: if a pipe is passed to an executable via `stdout` or `stderr`, only the write end is passed, and if it is passed via `argv` and `stdin`, only the read end is passed. If the write end of `pipe` is to be passed via `argv`, `pipe.rw()` should be passed instead.
 
 
 ## 2.6. Custom file names

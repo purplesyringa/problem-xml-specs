@@ -141,9 +141,9 @@ A `File` object can be created using the `File()` constructor, which creates a f
 
 An `Executable` object can be invoked by calling the object directly: `executable(*argv, stdin=..., stdout=..., stderr=..., files=..., limits=...)`:
 
-- An item of `argv` can be a string, a `bytes` object, a `File`, and also a `Pipe`, which is described in the next section. If an item is a `File` or a `Pipe`, the file is mounted read-only and the path to the object on the filesystem is passed as an argument. `file.rw()` can be passed to make the mount read-write.
+- An item of `argv` can be a string, a `bytes` object, a `File`, and also a `Pipe`, which is described in the next section. If an item is a `File` or a `Pipe`, the file is mounted read-only and the path to the object on the filesystem is passed as an argument. For files, `file.rw()` can be passed to make the mount read-write. For pipes, `pipe.wo()` can be passed to make it write-only.
 - `File` and `Pipe` objects can be passed as `stdin`, `stdout`, and `stderr`. The default values are `None`, which is equivalent to writing to or reading from `/dev/null`, `NUL`, or equivalent.
-- `files` is an optional dictionary of relative path to `File` mapping. If it is specified, the user program will be able to read the provided files at the given paths. `file.rw()` can be passed to make the mount read-write.
+- `files` is an optional dictionary of relative path to `File` mapping. If it is specified, the user program will be able to read the provided files at the given paths. `file.rw()` can be passed to make the mount read-write, and `pipe.wo()` to make it write-only.
 - `limits` sets the limits; if it is missing, or if it's present but a property is missing, default values apply. These defaults SHOULD be problem-configurable.
 
 The function returns an asynchronous future. Invocation is performed even if the future is not awaited.
@@ -170,11 +170,11 @@ for test in tests:
         interactor_output = File()
         i2u, u2i = Pipe(), Pipe()
         user(stdin=i2u, stdout=u2i)
-        interactor(test.input, interactor_output.rw(), test.answer, stdin=u2i, stdout=i2u)
+        interactor(test.input, interactor_output.wo(), test.answer, stdin=u2i, stdout=i2u)
         checker(test.input, interactor_output, test.answer)
 ```
 
-In this example, there is a new kind of object: `Pipe`. A `Pipe` refers to a named PIPE or an equivalent object, depending on the platform. A `Pipe` is not subject to the reader-after-writer feature of `File`. `Pipe`s are unidirectional: if a pipe is passed to an executable via `stdout` or `stderr`, only the write end is passed, and if it is passed via `argv` and `stdin`, only the read end is passed. If the write end of `pipe` is to be passed via `argv`, `pipe.rw()` should be passed instead.
+In this example, there is a new kind of object: `Pipe`. A `Pipe` refers to a named PIPE or an equivalent object, depending on the platform. A `Pipe` is not subject to the reader-after-writer feature of `File`. `Pipe`s are unidirectional: if a pipe is passed to an executable via `stdout` or `stderr`, only the write end is passed, and if it is passed via `argv` and `stdin`, only the read end is passed. If the write end of `pipe` is to be passed via `argv`, `pipe.wo()` should be passed instead.
 
 
 ## 2.6. Custom file names

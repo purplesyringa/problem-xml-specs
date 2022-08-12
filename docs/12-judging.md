@@ -89,7 +89,7 @@ Tests are numbered implicitly: the first test has number `1`, and the last test 
 
 If the method is `manual`, the file at `{TESTS-INPUT-PATTERN}` corresponding to the present test MUST exist. If the method is `generated`, it MAY exist, as preparation systems MAY allow the user to opt out of this.
 
-Similarly, regardless of the method, the file at `{TESTS-ANSWER-PATTERN}` corresponding to the present test MAY exist, as preparation systems MAY allow the user to opt out of this.
+Similarly, regardless of the method, the file at `{TESTS-ANSWER-PATTERN}` corresponding to the present test MAY exist, as preparation systems MAY allow the user to opt out of this. If the answer is missing, it is generated automatically by invoking the model solution. This requires the strategy to create exactly one file of role `answer` per test. The strategy is invoked to judge the model solution, with an empty file temporarily substituted for `test.answer`. When the file of role `answer` is written to, the test evaluation is halted (i.e. the checker is not invoked). When answers are generated for all tests, the strategy stops as a whole.
 
 In addition, if the method is `generated`, per-test generators are allowed. In this case, the test can be listed as follows:
 

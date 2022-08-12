@@ -66,7 +66,7 @@ Firstly, we show how the strategy for a simple input/output problem looks like:
 user = await compile(submission)
 for test in tests:
     with test:
-        output = File()
+        output = File(role="answer")
         user(stdin=test.input, stdout=output)
         checker(test.input, output, test.answer)
 ```
@@ -79,7 +79,7 @@ Most of this should be self-explanatory. Per line:
 
 3. Test context is entered, so that all verdicts are applied to this test.
 
-4. An empty file is created (one for each test).
+4. An empty file is created (one for each test), which will store the answer produced by the submission.
 
 5. The `user` program (that was just compiled) is invoked with standard output redirected into this new file, and standard input redirected from the input file associated with the test. The program is subject to default limits.
 
@@ -91,7 +91,7 @@ Another example is due, hopefully with no need of explanation. A run-twice probl
 user = await compile(submission)
 for test in tests:
     with test:
-        run1_output, run2_input, run2_output = File(), File(), File()
+        run1_output, run2_input, run2_output = File(), File(), File(role="answer")
         user(stdin=test.input, stdout=run1_output)
         checker(test.input, run1_output, test.answer, stdout=run2_input)
         user(stdin=run2_input, stdout=run2_output)
@@ -137,7 +137,7 @@ A `Verdict` can be created from a string, e.g. `Verdict("OK")`, and converted to
 
 A `Metrics` object contains `time` (in seconds), `memory` (in bytes), `real_time` (in seconds), and `idleness_time` (in seconds). See more in [6. Valuation](06-valuation.md).
 
-A `File` object can be created using the `File()` constructor, which creates a file of unknown type. The type can be passed at construction time via `File(type="...")`.
+A `File` object can be created using the `File()` constructor, which creates a file of unknown type. The type can be passed at construction time via `File(type="...")`. Additionally, `role` can be set via `File(role="...")`. The role is either `None` or `"answer"`. The role is used when generating answer files, as explained in [12. Judging](12-judging.md).
 
 An `Executable` object can be invoked by calling the object directly: `executable(*argv, stdin=..., stdout=..., stderr=..., files=..., limits=...)`:
 
@@ -167,7 +167,7 @@ The strategy for a typical interactive problem looks as follows:
 user = await compile(submission)
 for test in tests:
     with test:
-        interactor_output = File()
+        interactor_output = File(role="answer")
         i2u, u2i = Pipe(), Pipe()
         user(stdin=i2u, stdout=u2i)
         interactor(test.input, interactor_output.wo(), test.answer, stdin=u2i, stdout=i2u)
@@ -186,7 +186,7 @@ user = await compile(submission)
 
 for test in tests:
     with test:
-        output = File()
+        output = File(role="answer")
         user(stdin=test.input, stdout=output, files={"input.txt": test.input, "output.txt": output.rw()})
         checker(test.input, output, test.answer)
 ```
@@ -230,7 +230,7 @@ If different code has to be linked into the program supplied by the user, the st
 ```python
 async def run_test(test):
     with test:
-        output = File()
+        output = File(role="answer")
         user = await compile(submission, test.code, kind="testlib")
         user(stdin=test.input, stdout=output)
         checker(test.input, output, test.answer)
@@ -300,7 +300,7 @@ user = await compile(submission)
 
 async def run_test(test):
     with test:
-        output = File()
+        output = File(role="answer")
         await user(stdin=test.input, stdout=output)
         await checker(test.input, output, test.answer)
 
@@ -355,7 +355,7 @@ user = await compile(*files, kind="testlib")
 
 for test in tests:
     with test:
-        output = File()
+        output = File(role="answer")
         user(stdin=test.input, stdout=output)
         checker(test.input, output, test.answer)
 ```

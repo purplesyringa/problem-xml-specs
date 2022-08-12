@@ -94,7 +94,7 @@ This part is followed by code that depends on the problem type. For technical re
 If the problem type is `io`, the following code is injected:
 
 ```python
-output = File()
+output = File(role="answer")
 invoke(stdin=test.input, stdout=output)
 checker(test.input, output, test.answer)
 ```
@@ -105,7 +105,7 @@ checker(test.input, output, test.answer)
 If the problem type is `interactive`, the following code is injected:
 
 ```python
-interactor_output = File()
+interactor_output = File(role="answer")
 i2u, u2i = Pipe(), Pipe()
 invoke(stdin=i2u, stdout=u2i)
 interactor(test.input, interactor_output.rw(), test.answer, stdin=u2i, stdout=i2u)
@@ -118,7 +118,7 @@ checker(test.input, interactor_output, test.answer)
 If the problem type is `run-twice`, the following code is injected:
 
 ```python
-run1_output, run2_input, run2_output = File(), File(), File()
+run1_output, run2_input, run2_output = File(), File(), File(role="answer")
 invoke(stdin=test.input, stdout=run1_output)
 checker(test.input, run1_output, test.answer, stdout=run2_input)
 invoke(stdin=run2_input, stdout=run2_output)
@@ -131,7 +131,7 @@ checker(run2_input, run2_output, test.answer)
 If the problem type is `run-twice-interactive`, the following code is injected:
 
 ```python
-run2_input, run2_output = File(), File()
+run2_input, run2_output = File(), File(role="answer")
 i2u, u2i = Pipe(), Pipe()
 invoke(stdin=i2u, stdout=u2i)
 interactor(test.input, run2_input.rw(), test.answer, stdin=u2i, stdout=i2u)
@@ -145,7 +145,7 @@ checker(run2_input, run2_output, test.answer)
 If the problem type is `run-twice-double-interactive`, the following code is injected:
 
 ```python
-run2_input, interactor_output = File(), File()
+run2_input, interactor_output = File(), File(role="answer")
 run1_i2u, run1_u2i, run2_i2u, run2_u2i = Pipe(), Pipe(), Pipe(), Pipe()
 invoke(stdin=run1_i2u, stdout=run1_u2i)
 interactor(test.input, run2_input.rw(), test.answer, stdin=run1_u2i, stdout=run1_i2u)

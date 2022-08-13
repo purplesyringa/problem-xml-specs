@@ -224,7 +224,7 @@ The program MUST be listed in `<executables>` according to [10. Files](10-files.
 
 The program will be accessible to the strategy by name `{NAME}`.
 
-Technically, programs defined just inside `<assets>` could be moved into `<programs>`, if not for tests and other legacy options (except solutions, which are not really programs). For example, a checker can be defined as:
+Technically, programs defined just inside `<assets>` could be moved into `<programs>`, if not for tests and other legacy options (except solutions, which are not really programs). The names `checker`, `interactor`, and `validator` can be used for this. For example, a checker can be defined as:
 
 ```xml
 <program name="checker">
@@ -245,6 +245,8 @@ Similarly, an interactor can be defined as:
 ```
 
 ...and, if the problem is not run-twice, this will be identical to a dedicated `<interactor>` tag, except for legacy judges that can't parse `<programs>`. For this reason, preparation systems SHOULD abstain from using `<programs>` for checkers, interactors, and validators.
+
+In addition, the name `solution` is reserved and MUST NOT be used.
 
 
 ## 11.8. Strategy

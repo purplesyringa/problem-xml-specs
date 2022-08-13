@@ -90,12 +90,7 @@ The following stages are presently supported:
 - `compile`
 - `run`
 
-The following assets are recognized:
-
-- `validator`
-- `interactor`
-- `checker`
-- `solution`
+The asset name must match the name of one of the programs declared in [11. Assets](11-assets.md). This includes `validator`, `interactor`, and `checker` in classical problems. It may also be equal to `solution`, which means it's linked with the user submission.
 
 For `compile` stage, the behavior is just like when multiple arguments are passed to `compile` function by the strategy. Read more at [4. Compilation](04-compilation.md). For example, stage `compile` plus asset `checker` mean that a source code file will be passed to the compiler along with the checker source code.
 

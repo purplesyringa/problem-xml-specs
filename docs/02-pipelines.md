@@ -121,7 +121,7 @@ It also has the `submission.rate` and `submission.disable_autorate` methods, whi
 
 `compile` is an asynchronous function that takes a source file with a known type as a `File` object (or several source files) and emits an executable file. The type of the result is `Executable`.
 
-`Executable` usually represents a single file that is stored as a `File` object in the `main_file` attribute. However, in some cases an executable object may consist of several files. In this case `main_file` will only store one file, and the list of files along with their names is stored in the `files` attribute of type `dict[str, File]` (including `main_file` itself).
+`Executable` usually represents a single file that is stored as a `File` object in the `main_file` attribute. However, in some cases an executable object may consist of several files. In this case `main_file` will only store one file, and the list of files along with their names is stored in the `files` attribute of type `dict[str, File]` (including `main_file` itself). For some executable formats, if there are multiple files, neither of them is exclusively important, in which case `main_file` may be `None`.
 
 Executables that are attached to the problem, such as checkers and validators, are stored as `Executable` objects named `checker`, `validator`, etc. This can be customized.
 

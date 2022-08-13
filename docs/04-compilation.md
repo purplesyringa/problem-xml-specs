@@ -145,44 +145,44 @@ Other languages use paths, and this means that the problem-provided files have t
 
 Except that some languages require the file name to match the module name, which complicates matters even more.
 
-Besides, many languages have a notion of a "main" file, e.g. Python and Rust. This means that the problemsetter has to specify the **entrypoint file** explicitly. In simple problems that don't provide graders or libraries, there is only one module--the user's submission--and so the entrypoint is obvious. When the problem provides source files, though, the choice is less clear.
+Besides, many languages have a notion of a "main" file, e.g. Python and Rust. In simple problems that don't provide graders or libraries, there is only one module, that is, the user's submission, but when the problem provides source files the choice is less clear. In this case, it is the responsibility of the judge to either detect the main file automatically or generate a virtual entrypoint, as described below.
 
 This section explains how officially supported languages are to be handled, and how cross-file communication is performed.
 
 
 ### 4.2.1. C
 
-The C programming language supports passing multiple source files to the compiler. Files of two types are allowed: `c` and `c-h`. Only the former should be included in the compilation line. Both types of files MUST be accessible to the compiler at the appropriate locations. The user submission may have an arbitrary file name, except the extension, which MUST be `c`. The specified entrypoint does not affect compilation in any way.
+The C programming language supports passing multiple source files to the compiler. Files of two types are allowed: `c` and `c-h`. Only the former should be included in the compilation line. Both types of files MUST be accessible to the compiler at the appropriate locations. The user submission may have an arbitrary file name, except the extension, which MUST be `c`.
 
 
 ### 4.2.2. C++
 
-The C++ programming language supports passing multiple source files to the compiler. Files of two types are allowed: `cpp` and `cpp-h`. Only the former should be included in the compilation line. Both types of files MUST be accessible to the compiler at the appropriate locations. The user submission may have an arbitrary file name, except the extension, which MUST be `cpp`. The specified entrypoint does not affect compilation in any way.
+The C++ programming language supports passing multiple source files to the compiler. Files of two types are allowed: `cpp` and `cpp-h`. Only the former should be included in the compilation line. Both types of files MUST be accessible to the compiler at the appropriate locations. The user submission may have an arbitrary file name, except the extension, which MUST be `cpp`.
 
 
 ### 4.2.3. C#
 
-The C# programming language supports passing multiple source files to the compiler. The user submission may have an arbitrary file name, except the extension, which MUST be `cs`. The entrypoint file MUST contain exactly one class with the `Main` method (but may contain other classes). Other files MUST NOT include this method.
+The C# programming language supports passing multiple source files to the compiler. The user submission may have an arbitrary file name, except the extension, which MUST be `cs`. Among all source files, exactly one file MUST contain exactly one class with the `Main` method (other classes may be defined too). The main class MUST be public. This class is considered the entrypoint.
 
-The paragraph below applies in case the entrypoint file is not the user's submission.
+The paragraph below applies in case the entrypoint is not in the user's submission.
 
-The main user class MUST be public. If there are several public classes, the class with name `Solution` is considered the public one, and if it doesn't exist, the submission is considered ill-formed. Otherwise, if the name of the one and only public class is not `Solution`, an implicit using directive MUST be added to make `Solution` an alias of this class.
+The user code MUST contain at least one public class. If there are several public classes, one of them MUST be named `Solution`, or the submission is considered ill-formed. If there is one exactly public class, and it's not named `Solution`, an implicit using directive MUST be added to make `Solution` an alias of this class.
 
 
 ### 4.2.4. Common Lisp
 
 The Common Lisp programming language does not support passing multiple source files to the compiler. Problem-provided files MUST be accessible using `(load "{PATH}")`; `{PATH}` MUST NOT include the `cl` or `lisp` extension to enable pre-compilation. Similarly, the user file MUST be accessible to the problem-wide programs using `(load *solution*)`. If there is more than one user-kind file, a "virtual" solution is to be provided, containing `(load ...)` directives that load all the user files in some undefined order.
 
-As `clisp` does not load rc files in batch mode, a separate virtual entrypoint that calls the real entrypoint and then exits SHOULD be passed to the interpreter.
+As `clisp` does not load rc files in batch mode, a separate virtual entrypoint that imports all source files in arbitrary order and then exits SHOULD be passed to the interpreter.
 
 CL supports per-file compilation with `(compile-file)` or an equivalent compiler option. For efficiency, files SHOULD be pre-compiled.
 
 
 ### 4.2.5. D
 
-The D programming language supports passing multiple source files to the compiler. The user submission MUST be accessible to the problem-wide files using `import solution`; if the name of the user file is not `solution.d`, a virtual file that re-exports the user code is to be provided. The specified entrypoint does not affect compilation in any way.
+The D programming language supports passing multiple source files to the compiler. The user submission MUST be accessible to the problem-wide files using `import solution`; if the name of the user file is not `solution.d`, a virtual file that re-exports the user code is to be provided.
 
 
 ### 4.2.6. Dart
 
-The Common Lisp programming language does not support passing multiple source files to the compiler. The user submission MUST be accessible to the problem-wide files using `import "solution.dart"`; if the name of the user file is not `solution.dart`, a virtual file that re-exports the user code is to be provided. Problem-provided files MUST be accessible using `import`. The specified entrypoint does not affect compilation in any way.
+The Common Lisp programming language does not support passing multiple source files to the compiler. The user submission MUST be accessible to the problem-wide files using `import "solution.dart"`; if the name of the user file is not `solution.dart`, a virtual file that re-exports the user code is to be provided. Problem-provided files MUST be accessible using `import`.

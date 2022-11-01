@@ -370,7 +370,7 @@ The supported platforms are `linux`, `netbsd`, `freebsd`, `openbsd`, `systemv`, 
 
 The format identifier `macho` is appointed to the Mach-O format. It supports all three kinds: `exe` for executables, `dylib` for bundles and .dylib files, and `obj` for .o files. The only version is `default`.
 
-The only supported platform is `macos`.
+The only supported platform is `darwin`.
 
 
 ### 3.4.4. PE
